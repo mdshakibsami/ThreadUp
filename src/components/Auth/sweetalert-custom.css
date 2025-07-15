@@ -1,0 +1,86 @@
+/* Custom SweetAlert2 styles for ThreadUp */
+.custom-swal-popup {
+  border-radius: 1.5rem !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+  border: 2px solid transparent !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+}
+
+.custom-swal-popup .swal2-content {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.custom-swal-title {
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 1.5rem !important;
+}
+
+.custom-swal-content {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 1rem !important;
+}
+
+.custom-swal-confirm-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border: none !important;
+  border-radius: 0.75rem !important;
+  padding: 0.75rem 2rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.custom-swal-confirm-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px -8px rgba(16, 185, 129, 0.5) !important;
+}
+
+.custom-swal-error-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  border: none !important;
+  border-radius: 0.75rem !important;
+  padding: 0.75rem 2rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.custom-swal-error-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px -8px rgba(239, 68, 68, 0.5) !important;
+}
+
+.swal2-icon.swal2-success {
+  border-color: #10b981 !important;
+}
+
+.swal2-icon.swal2-success [class^='swal2-success-line'] {
+  background-color: #10b981 !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-ring {
+  border-color: #10b981 !important;
+}
+
+.swal2-icon.swal2-error {
+  border-color: #ef4444 !important;
+}
+
+.swal2-icon.swal2-error [class^='swal2-x-mark-line'] {
+  background-color: #ef4444 !important;
+}
+
+.swal2-loader {
+  border-color: #667eea #667eea #667eea transparent !important;
+}
+
+@keyframes swal2-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
