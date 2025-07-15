@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import "./sweetalert-custom.css";
+import { useNavigate } from "react-router";
 
 const Register = () => {
   const {
@@ -11,12 +12,18 @@ const Register = () => {
     watch,
     formState: { errors },
   } = useForm();
-  const { createUser } = useAuth();
+
+  const { createUser, googleSignIn, updateUser } = useAuth();
+  const navigate = useNavigate();
 
   const password = watch("password");
 
   const onSubmit = async (data) => {
     console.log("Registration data:", data);
+    const name = data.firstName + " " + data.lastName;
+    const profileInfo = {
+      displayName: name,
+    };
     // Show loading alert
     Swal.fire({
       title: "Creating Account...",
@@ -39,6 +46,8 @@ const Register = () => {
     try {
       const result = await createUser(data.email, data.password);
       console.log(result);
+
+      updateUser(profileInfo);
 
       // Success alert
       Swal.fire({
@@ -73,6 +82,63 @@ const Register = () => {
         icon: "error",
         title: "Registration Failed",
         text: error.message || "Something went wrong. Please try again.",
+        confirmButtonText: "Try Again",
+        customClass: {
+          popup: "custom-swal-popup",
+          title: "custom-swal-title",
+          content: "custom-swal-content",
+          confirmButton: "custom-swal-error-btn",
+        },
+        background: "#ffffff",
+        color: "#374151",
+        iconColor: "#ef4444",
+        showClass: {
+          popup: "animate__animated animate__shakeX",
+        },
+      });
+    }
+  };
+
+  // google login
+  const handleLogin = async () => {
+    try {
+      const result = await googleSignIn();
+      console.log(result);
+
+      // Success alert
+      Swal.fire({
+        icon: "success",
+        title: "Welcome!",
+        text: "You have successfully signed in with Google.",
+        confirmButtonText: "Continue",
+        customClass: {
+          popup: "custom-swal-popup",
+          title: "custom-swal-title",
+          content: "custom-swal-content",
+          confirmButton: "custom-swal-confirm-btn",
+        },
+        background: "#ffffff",
+        color: "#374151",
+        iconColor: "#10b981",
+        showClass: {
+          popup: "animate__animated animate__fadeInDown",
+        },
+        hideClass: {
+          popup: "animate__animated animate__fadeOutUp",
+        },
+      }).then(() => {
+        navigate("/");
+      });
+    } catch (error) {
+      console.log(error);
+
+      // Error alert
+      Swal.fire({
+        icon: "error",
+        title: "Sign In Failed",
+        text:
+          error.message ||
+          "Google sign in was cancelled or failed. Please try again.",
         confirmButtonText: "Try Again",
         customClass: {
           popup: "custom-swal-popup",
@@ -357,7 +423,10 @@ const Register = () => {
             <div className="divider my-8">OR</div>
 
             <div className="space-y-4">
-              <button className="btn btn-outline w-full flex items-center justify-center space-x-2">
+              <button
+                onClick={handleLogin}
+                className="btn btn-outline w-full flex items-center justify-center space-x-2"
+              >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path
                     fill="currentColor"

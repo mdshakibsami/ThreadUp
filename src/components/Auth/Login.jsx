@@ -1,5 +1,8 @@
 import { useForm } from "react-hook-form";
-// import useAuth from "../../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
+import "./sweetalert-custom.css";
+import { useNavigate } from "react-router";
 
 const Login = () => {
   const {
@@ -8,10 +11,142 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-//   const { createUser } = useAuth();
+  const { signIn, googleSignIn } = useAuth();
+  const navigate = useNavigate();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
+
+    // Show loading alert
+    Swal.fire({
+      title: "Signing In...",
+      text: "Please wait while we sign you in",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      customClass: {
+        popup: "custom-swal-popup",
+        title: "custom-swal-title",
+        content: "custom-swal-content",
+      },
+      background: "#ffffff",
+      color: "#374151",
+    });
+
+    try {
+      const result = await signIn(data.email, data.password);
+      console.log(result);
+
+      // Success alert
+      Swal.fire({
+        icon: "success",
+        title: "Welcome Back!",
+        text: "You have successfully signed in to ThreadUp.",
+        confirmButtonText: "Continue",
+        customClass: {
+          popup: "custom-swal-popup",
+          title: "custom-swal-title",
+          content: "custom-swal-content",
+          confirmButton: "custom-swal-confirm-btn",
+        },
+        background: "#ffffff",
+        color: "#374151",
+        iconColor: "#10b981",
+        showClass: {
+          popup: "animate__animated animate__fadeInDown",
+        },
+        hideClass: {
+          popup: "animate__animated animate__fadeOutUp",
+        },
+      }).then(() => {
+        // Redirect to home
+        navigate("/");
+      });
+    } catch (error) {
+      console.log(error);
+
+      // Error alert
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: error.message || "Invalid email or password. Please try again.",
+        confirmButtonText: "Try Again",
+        customClass: {
+          popup: "custom-swal-popup",
+          title: "custom-swal-title",
+          content: "custom-swal-content",
+          confirmButton: "custom-swal-error-btn",
+        },
+        background: "#ffffff",
+        color: "#374151",
+        iconColor: "#ef4444",
+        showClass: {
+          popup: "animate__animated animate__shakeX",
+        },
+      });
+    }
+  };
+
+  // google login
+  const handleLogin = async () => {
+    try {
+      const result = await googleSignIn();
+      console.log(result);
+
+      // Success alert
+      Swal.fire({
+        icon: "success",
+        title: "Welcome!",
+        text: "You have successfully signed in with Google.",
+        confirmButtonText: "Continue",
+        customClass: {
+          popup: "custom-swal-popup",
+          title: "custom-swal-title",
+          content: "custom-swal-content",
+          confirmButton: "custom-swal-confirm-btn",
+        },
+        background: "#ffffff",
+        color: "#374151",
+        iconColor: "#10b981",
+        showClass: {
+          popup: "animate__animated animate__fadeInDown",
+        },
+        hideClass: {
+          popup: "animate__animated animate__fadeOutUp",
+        },
+      }).then(() => {
+        // Navigate to home
+        window.location.href = "/";
+        navigate("/");
+      });
+    } catch (error) {
+      console.log(error);
+
+      // Error alert
+      Swal.fire({
+        icon: "error",
+        title: "Sign In Failed",
+        text:
+          error.message ||
+          "Google sign in was cancelled or failed. Please try again.",
+        confirmButtonText: "Try Again",
+        customClass: {
+          popup: "custom-swal-popup",
+          title: "custom-swal-title",
+          content: "custom-swal-content",
+          confirmButton: "custom-swal-error-btn",
+        },
+        background: "#ffffff",
+        color: "#374151",
+        iconColor: "#ef4444",
+        showClass: {
+          popup: "animate__animated animate__shakeX",
+        },
+      });
+    }
   };
 
   return (
@@ -128,10 +263,6 @@ const Login = () => {
                   className="input input-bordered w-full focus:input-primary"
                   {...register("password", {
                     required: "Password is required",
-                    // pattern: {
-                    //   value: /^\S+@\S+$/i,
-                    //   message: "Invalid email address",
-                    // },
                   })}
                 />
                 {errors.password && (
@@ -152,7 +283,10 @@ const Login = () => {
             <div className="divider my-8">OR</div>
 
             <div className="space-y-4">
-              <button className="btn btn-outline w-full flex items-center justify-center space-x-2">
+              <button
+                onClick={handleLogin}
+                className="btn btn-outline w-full flex items-center justify-center space-x-2"
+              >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path
                     fill="currentColor"
