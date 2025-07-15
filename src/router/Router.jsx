@@ -4,6 +4,8 @@ import Home from "../pages/Home";
 import About from "../components/About/About";
 import Login from "../components/Auth/Login";
 import Register from "../components/Auth/Register";
+import Dashboard from "../pages/Dashboard";
+import AddPost from "../components/Add Post/AddPost";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +28,14 @@ export const router = createBrowserRouter([
         path: "register",
         Component: Register,
       },
+      {
+        path: "add-post",
+        Component: AddPost,
+      },
     ],
+  },
+  {
+    path: "/dashboard",
+    Component: Dashboard,
   },
 ]);
