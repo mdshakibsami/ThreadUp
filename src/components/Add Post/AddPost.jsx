@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import useAuth from "../../hooks/useAuth";
+import { axiosSecure } from "../../hooks/useAxiosSecure";
 
 const AddPost = () => {
+  const { user } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
+    // reset,
   } = useForm();
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [imageURL, setImageURL] = useState(null);
 
   // Tag options for select dropdown
   const tagOptions = [
@@ -41,8 +45,10 @@ const AddPost = () => {
     "Education",
   ];
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
+
+    // Preview
     if (file) {
       setImageFile(file);
       const reader = new FileReader();
@@ -50,6 +56,30 @@ const AddPost = () => {
         setImagePreview(e.target.result);
       };
       reader.readAsDataURL(file);
+    }
+
+    // Upload to imgbb
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await fetch(
+        `https://api.imgbb.com/1/upload?key=f59c5887a63b13118269365620e66a33`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await res.json();
+      if (data.success) {
+        const imageUrl = data.data.url;
+        setImageURL(imageUrl);
+      } else {
+        console.error("Upload failed", data);
+      }
+    } catch (err) {
+      console.error("Error uploading image to imgbb:", err);
     }
   };
 
@@ -100,18 +130,47 @@ const AddPost = () => {
 
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
 
       const postData = {
         title: data.title,
         description: data.description,
         tag: data.tag,
+        authorName: user.displayName,
+        authorEmail: user.email,
+        authorImage:
+          user.photoURL ||
+          "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+        userId: user.uid,
+        upVote: 0,
+        downVote: 0,
+        commentsCount: 0,
         visibility: data.visibility,
-        image: imageFile,
+        image: imageURL,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       console.log("Post Data:", postData);
+
+      try {
+        const response = await axiosSecure.post("/posts", postData);
+        if (response?.data) {
+          console.log("Success:", response.data);
+        }
+      } catch (error) {
+        if (error.response) {
+          console.error(
+            "Server error:",
+            error.response.status,
+            error.response.data
+          );
+        } else if (error.request) {
+          console.error("No response from server:", error.request);
+        } else {
+          console.error("Error:", error.message);
+        }
+      }
 
       // Success alert
       Swal.fire({
@@ -126,7 +185,7 @@ const AddPost = () => {
       });
 
       // Reset form
-      reset();
+      // reset();
       setImageFile(null);
       setImagePreview(null);
     } catch (error) {

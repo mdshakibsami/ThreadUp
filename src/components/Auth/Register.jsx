@@ -23,6 +23,8 @@ const Register = () => {
     const name = data.firstName + " " + data.lastName;
     const profileInfo = {
       displayName: name,
+      photoURL:
+        "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
     };
     // Show loading alert
     Swal.fire({
@@ -47,33 +49,37 @@ const Register = () => {
       const result = await createUser(data.email, data.password);
       console.log(result);
 
-      updateUser(profileInfo);
-
-      // Success alert
-      Swal.fire({
-        icon: "success",
-        title: "Account Created Successfully!",
-        text: `Welcome to ThreadUp, ${data.firstName}! Your account has been created.`,
-        confirmButtonText: "Get Started",
-        customClass: {
-          popup: "custom-swal-popup",
-          title: "custom-swal-title",
-          content: "custom-swal-content",
-          confirmButton: "custom-swal-confirm-btn",
-        },
-        background: "#ffffff",
-        color: "#374151",
-        iconColor: "#10b981",
-        showClass: {
-          popup: "animate__animated animate__fadeInDown",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutUp",
-        },
-      }).then(() => {
-        // Redirect to login or dashboard
-        window.location.href = "/login";
-      });
+      updateUser(profileInfo)
+        .then((res) => {
+          console.log(res);
+          // Success alert
+          Swal.fire({
+            icon: "success",
+            title: "Account Created Successfully!",
+            text: `Welcome to ThreadUp, ${data.firstName}! Your account has been created.`,
+            confirmButtonText: "Get Started",
+            customClass: {
+              popup: "custom-swal-popup",
+              title: "custom-swal-title",
+              content: "custom-swal-content",
+              confirmButton: "custom-swal-confirm-btn",
+            },
+            background: "#ffffff",
+            color: "#374151",
+            iconColor: "#10b981",
+            showClass: {
+              popup: "animate__animated animate__fadeInDown",
+            },
+            hideClass: {
+              popup: "animate__animated animate__fadeOutUp",
+            },
+          }).then(() => {
+            // Redirect to login or dashboard
+            window.location.href = "/login";
+          });
+        })
+        .catch((error) => console.log(error));
+      console.log(profileInfo);
     } catch (error) {
       console.log(error);
 
