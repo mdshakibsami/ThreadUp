@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { searchFilteredPosts } from "../../../servises/api";
 import { useSearch } from "../../../hooks/useFilter";
@@ -21,12 +21,19 @@ const SearchBar = () => {
     queryKey: ["posts", { search }],
     queryFn: searchFilteredPosts,
   });
+
+  // Use useEffect to update posts when data changes
+  useEffect(() => {
+    if (data) {
+      setPosts(data);
+    }
+  }, [data, setPosts]);
+  
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  console.log("data found", data);
 
-  setPosts(data);
+  // console.log("data found", data);
 
   return (
     <div className="relative bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 py-20 px-4 overflow-hidden">

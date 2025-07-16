@@ -1,8 +1,12 @@
+import useAuth from "../../../hooks/useAuth";
+import useDBUser from "../../../hooks/useDBUser";
 import { useSearch } from "../../../hooks/useFilter";
 
 const Posts = () => {
   const { posts } = useSearch();
-  console.log("all the posts", posts);
+  const { user } = useAuth();
+  const { data } = useDBUser(user.uid);
+  console.log(data);
   return (
     <div className="max-w-6xl mx-auto p-4">
       <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">

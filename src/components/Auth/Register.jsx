@@ -4,6 +4,7 @@ import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import "./sweetalert-custom.css";
 import { useNavigate } from "react-router";
+import { saveUserToDB } from "../../servises/api";
 
 const Register = () => {
   const {
@@ -47,11 +48,37 @@ const Register = () => {
 
     try {
       const result = await createUser(data.email, data.password);
-      console.log(result);
+      console.log("result", result);
+      const user = result.user;
+
+      //update user info in DB
+
+      const saveUser = {
+        uid: user.uid,
+        email: user.email,
+        name: name, // Add the user's name
+        photoURL: profileInfo.photoURL, // Add profile photo
+        role: "user",
+        badge: "bronze",
+        isMember: false,
+        postCount: 0,
+        createdAt: new Date().toISOString(),
+        last_log_in: new Date().toISOString(),
+      };
+
+      // Save to MongoDB
+      try {
+        await saveUserToDB(saveUser);
+        console.log("User saved to database successfully");
+      } catch (dbError) {
+        console.error("Database save error:", dbError);
+        throw new Error("Failed to save user data. Please try again.");
+      }
 
       updateUser(profileInfo)
         .then((res) => {
           console.log(res);
+
           // Success alert
           Swal.fire({
             icon: "success",
@@ -74,11 +101,11 @@ const Register = () => {
               popup: "animate__animated animate__fadeOutUp",
             },
           }).then(() => {
-            // Redirect to login or dashboard
-            window.location.href = "/login";
+            navigate("/");
           });
         })
         .catch((error) => console.log(error));
+
       console.log(profileInfo);
     } catch (error) {
       console.log(error);
@@ -110,31 +137,51 @@ const Register = () => {
     try {
       const result = await googleSignIn();
       console.log(result);
+      const user = result.user;
 
-      // Success alert
-      Swal.fire({
-        icon: "success",
-        title: "Welcome!",
-        text: "You have successfully signed in with Google.",
-        confirmButtonText: "Continue",
-        customClass: {
-          popup: "custom-swal-popup",
-          title: "custom-swal-title",
-          content: "custom-swal-content",
-          confirmButton: "custom-swal-confirm-btn",
-        },
-        background: "#ffffff",
-        color: "#374151",
-        iconColor: "#10b981",
-        showClass: {
-          popup: "animate__animated animate__fadeInDown",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutUp",
-        },
-      }).then(() => {
-        navigate("/");
-      });
+      try {
+        const saveUser = {
+          uid: user.uid,
+          email: user.email,
+          name: user.displayName || "",
+          photoURL: user.photoURL || "",
+          role: "user",
+          badge: "bronze",
+          isMember: false,
+          postCount: 0,
+          createdAt: new Date().toISOString(),
+          last_log_in: new Date().toISOString(),
+        };
+        // Save to MongoDB
+        await saveUserToDB(saveUser);
+
+        // Success alert
+        Swal.fire({
+          icon: "success",
+          title: "Welcome!",
+          text: "You have successfully signed in with Google.",
+          confirmButtonText: "Continue",
+          customClass: {
+            popup: "custom-swal-popup",
+            title: "custom-swal-title",
+            content: "custom-swal-content",
+            confirmButton: "custom-swal-confirm-btn",
+          },
+          background: "#ffffff",
+          color: "#374151",
+          iconColor: "#10b981",
+          showClass: {
+            popup: "animate__animated animate__fadeInDown",
+          },
+          hideClass: {
+            popup: "animate__animated animate__fadeOutUp",
+          },
+        }).then(() => {
+          navigate("/");
+        });
+      } catch (error) {
+        console.log(error, "fail to insert user in DB");
+      }
     } catch (error) {
       console.log(error);
 
