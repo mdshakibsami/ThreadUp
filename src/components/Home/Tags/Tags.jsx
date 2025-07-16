@@ -1,4 +1,6 @@
+// import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
+// import { tagFilteredPosts } from "../../../servises/api";
 
 const Tags = () => {
   const [selectedTag, setSelectedTag] = useState(null);
@@ -39,12 +41,13 @@ const Tags = () => {
   const handleTagClick = (tagName) => {
     setSelectedTag(tagName);
     console.log(`Searching for posts with tag: ${tagName}`);
-    // Handle search logic here
   };
 
   const getTrendingTags = () => {
     return trendingTags.sort((a, b) => b.count - a.count);
   };
+
+
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">

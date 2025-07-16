@@ -15,6 +15,7 @@ const AddPost = () => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [imageURL, setImageURL] = useState(null);
+  const [selectedTags, setSelectedTags] = useState([]);
 
   // Tag options for select dropdown
   const tagOptions = [
@@ -44,6 +45,21 @@ const AddPost = () => {
     "Movies",
     "Education",
   ];
+
+  // Handle tag selection
+  const handleTagToggle = (tag) => {
+    const tagLower = tag.toLowerCase();
+    if (selectedTags.includes(tagLower)) {
+      setSelectedTags(selectedTags.filter((t) => t !== tagLower));
+    } else {
+      setSelectedTags([...selectedTags, tagLower]);
+    }
+  };
+
+  // Remove tag
+  const removeTag = (tagToRemove) => {
+    setSelectedTags(selectedTags.filter((tag) => tag !== tagToRemove));
+  };
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
@@ -85,11 +101,11 @@ const AddPost = () => {
 
   const onSubmit = async (data) => {
     // Validation for required fields
-    if (!data.tag) {
+    if (selectedTags.length === 0) {
       Swal.fire({
         icon: "error",
-        title: "Missing Tag",
-        text: "Please select a tag for your post.",
+        title: "Missing Tags",
+        text: "Please select at least one tag for your post.",
         customClass: {
           popup: "swal-custom-popup",
           title: "swal-custom-title",
@@ -99,11 +115,11 @@ const AddPost = () => {
       return;
     }
 
-    if (!imageFile) {
+    if (!imageFile || !imageURL) {
       Swal.fire({
         icon: "error",
         title: "Missing Image",
-        text: "Please select an image for your post.",
+        text: "Please select an image for your post and wait for it to upload.",
         customClass: {
           popup: "swal-custom-popup",
           title: "swal-custom-title",
@@ -129,13 +145,11 @@ const AddPost = () => {
     });
 
     try {
-      // Simulate API call
-      // await new Promise((resolve) => setTimeout(resolve, 2000));
-
       const postData = {
         title: data.title,
         description: data.description,
-        tag: data.tag,
+        tags: selectedTags, // Array of tags
+        tag: selectedTags[0], // First tag as primary (for backward compatibility)
         authorName: user.displayName,
         authorEmail: user.email,
         authorImage:
@@ -152,48 +166,45 @@ const AddPost = () => {
       };
 
       console.log("Post Data:", postData);
+      console.log("Selected Tags:", selectedTags);
 
-      try {
-        const response = await axiosSecure.post("/posts", postData);
-        if (response?.data) {
-          console.log("Success:", response.data);
-        }
-      } catch (error) {
-        if (error.response) {
-          console.error(
-            "Server error:",
-            error.response.status,
-            error.response.data
-          );
-        } else if (error.request) {
-          console.error("No response from server:", error.request);
-        } else {
-          console.error("Error:", error.message);
-        }
+      const response = await axiosSecure.post("/posts", postData);
+
+      if (response?.data) {
+        console.log("Success:", response.data);
+
+        // Success alert
+        Swal.fire({
+          icon: "success",
+          title: "Post Created!",
+          text: "Your post has been successfully created.",
+          customClass: {
+            popup: "swal-custom-popup",
+            title: "swal-custom-title",
+            confirmButton: "swal-custom-confirm",
+          },
+        });
+
+        // Reset form
+        // reset();
+        setImageFile(null);
+        setImagePreview(null);
+        setImageURL(null);
+        setSelectedTags([]);
       }
-
-      // Success alert
-      Swal.fire({
-        icon: "success",
-        title: "Post Created!",
-        text: "Your post has been successfully created.",
-        customClass: {
-          popup: "swal-custom-popup",
-          title: "swal-custom-title",
-          confirmButton: "swal-custom-confirm",
-        },
-      });
-
-      // Reset form
-      // reset();
-      setImageFile(null);
-      setImagePreview(null);
     } catch (error) {
       console.error("Error creating post:", error);
+
+      // Close loading alert first
+      Swal.close();
+
+      // Show error alert
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Something went wrong while creating your post.",
+        text:
+          error.response?.data?.message ||
+          "Something went wrong while creating your post.",
         customClass: {
           popup: "swal-custom-popup",
           title: "swal-custom-title",
@@ -353,35 +364,60 @@ const AddPost = () => {
 
             {/* Tag Selection */}
             <div>
-              <label
-                htmlFor="tag"
-                className="block text-sm font-bold text-purple-700 mb-2"
-              >
-                Select Tag *
+              <label className="block text-sm font-bold text-purple-700 mb-2">
+                Select Tags * (Choose multiple)
               </label>
-              <select
-                id="tag"
-                {...register("tag", {
-                  required: "Please select a tag for your post",
+
+              {/* Selected Tags Display */}
+              {selectedTags.length > 0 && (
+                <div className="mb-4 p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+                  <p className="text-sm text-purple-600 font-medium mb-2">
+                    Selected Tags:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedTags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center gap-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm font-medium"
+                      >
+                        #{tag}
+                        <button
+                          type="button"
+                          onClick={() => removeTag(tag)}
+                          className="hover:bg-white hover:text-purple-500 rounded-full p-1 transition-colors duration-200"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tag Options Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 max-h-60 overflow-y-auto">
+                {tagOptions.map((tag) => {
+                  const isSelected = selectedTags.includes(tag.toLowerCase());
+                  return (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => handleTagToggle(tag)}
+                      className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                        isSelected
+                          ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg scale-105"
+                          : "bg-white text-purple-700 border border-purple-200 hover:bg-purple-100 hover:border-purple-300"
+                      }`}
+                    >
+                      {tag}
+                    </button>
+                  );
                 })}
-                className="w-full px-4 py-3 border-2 border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-gradient-to-r from-purple-50 to-pink-50 text-purple-700 font-medium"
-              >
-                <option value="" className="text-gray-500">
-                  Choose a tag for your post...
-                </option>
-                {tagOptions.map((tag) => (
-                  <option
-                    key={tag}
-                    value={tag.toLowerCase()}
-                    className="text-purple-700"
-                  >
-                    {tag}
-                  </option>
-                ))}
-              </select>
-              {errors.tag && (
+              </div>
+
+              {selectedTags.length === 0 && (
                 <p className="mt-2 text-sm text-red-600 font-medium">
-                  {errors.tag.message}
+                  Please select at least one tag for your post
                 </p>
               )}
             </div>

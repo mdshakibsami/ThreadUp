@@ -1,25 +1,32 @@
-import React, { useState } from "react";
+import { useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { searchFilteredPosts } from "../../../servises/api";
+import { useSearch } from "../../../hooks/useFilter";
 
 const SearchBar = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const inputRef = useRef();
+  const { setPosts } = useSearch();
+  const [search, setSearch] = useState(" ");
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log("Search query:", searchQuery);
-    console.log("Category:", selectedCategory);
-    // Handle search logic here
+    const search = e.target.search.value;
+    console.log(search);
+    setSearch(search);
+    // Reset input
+    inputRef.current.value = "";
   };
 
-  const categories = [
-    { value: "all", label: "All Posts" },
-    { value: "technology", label: "Technology" },
-    { value: "lifestyle", label: "Lifestyle" },
-    { value: "travel", label: "Travel" },
-    { value: "food", label: "Food" },
-    { value: "fashion", label: "Fashion" },
-    { value: "health", label: "Health" },
-  ];
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["posts", { search }],
+    queryFn: searchFilteredPosts,
+  });
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  console.log("data found", data);
+
+  setPosts(data);
 
   return (
     <div className="relative bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 py-20 px-4 overflow-hidden">
@@ -44,46 +51,16 @@ const SearchBar = () => {
 
         {/* Search form */}
         <form onSubmit={handleSearch} className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-2xl p-2 flex flex-col md:flex-row gap-2">
-            {/* Category selector */}
-            <div className="flex-shrink-0">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="select select-bordered w-full md:w-auto bg-gray-50 border-gray-200 focus:border-purple-400 focus:outline-none"
-              >
-                {categories.map((category) => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
+          <div className="bg-white rounded-2xl shadow-2xl p-2 flex items-center gap-2">
             {/* Search input */}
             <div className="flex-1 relative">
               <input
                 type="text"
+                ref={inputRef}
+                name="search"
                 placeholder="Search for posts, topics, or users..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
                 className="input input-bordered w-full bg-gray-50 border-gray-200 focus:border-purple-400 focus:outline-none pr-12"
               />
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                <svg
-                  className="w-5 h-5 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </div>
             </div>
 
             {/* Search button */}
