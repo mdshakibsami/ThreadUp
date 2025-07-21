@@ -127,7 +127,7 @@ const Navbar = () => {
       <div className="navbar-end space-x-2">
         {user ? (
           <>
-            <Link to="" className="btn text-white bg-[#f73395] hover:scale-101">
+            <Link to="/member" className="btn text-white bg-[#f73395] hover:scale-101">
               Be a Member
             </Link>
             {/* Notification Icon */}
