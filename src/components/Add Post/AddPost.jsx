@@ -158,7 +158,7 @@ const AddPost = () => {
         userId: user.uid,
         upVote: 0,
         downVote: 0,
-        commentsCount: 0,
+        comments: [],
         visibility: data.visibility,
         image: imageURL,
         createdAt: new Date().toISOString(),

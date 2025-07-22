@@ -1,10 +1,23 @@
-import { useParams } from "react-router";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import { axiosSecure } from "../../../hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import useAuth from "../../../hooks/useAuth";
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  WhatsappShareButton,
+  WhatsappIcon,
+  TelegramShareButton,
+  TelegramIcon,
+} from "react-share";
 
 const PostDetails = () => {
   const { id } = useParams();
-  console.log(id);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [comment, setComment] = useState("");
 
   const fetchPostById = async () => {
     const response = await axiosSecure.get(`/posts/${id}`);
@@ -21,6 +34,65 @@ const PostDetails = () => {
   });
 
   console.log(post);
+
+  //  Upvote Query
+
+  const { mutate: upvoteQuery, isPending: isUpvoting } = useMutation({
+    mutationFn: async () => {
+      const result = await axiosSecure.patch(`/posts/upvote/${id}`);
+      console.log(result);
+      return result.data;
+    },
+    onSuccess: () => {
+      // This will refetch the post data immediately after successful upvote
+      queryClient.invalidateQueries(["post", id]);
+    },
+    onError: (error) => {
+      console.error("Upvote failed:", error);
+      alert("Failed to upvote. Please try again.");
+    },
+  });
+
+  //  Downvote Query
+  const { mutate: downvoteQuery } = useMutation({
+    mutationFn: async () => {
+      const result = await axiosSecure.patch(`/posts/downvote/${id}`);
+      console.log(result);
+      return result.data;
+    },
+    onSuccess: () => {
+      // This will refetch the post data immediately after successful Downvote
+      queryClient.invalidateQueries(["post", id]);
+    },
+    onError: (error) => {
+      console.error("Downvote failed:", error);
+      alert("Failed to Downvote. Please try again.");
+    },
+  });
+
+  // Comment mutation
+  const { mutate: submitComment, isPending: isSubmittingComment } = useMutation(
+    {
+      mutationFn: async (commentText) => {
+        const result = await axiosSecure.post(`/posts/${id}/comments`, {
+          content: commentText,
+          authorName: user?.displayName,
+          authorImage: user?.photoURL,
+          createdAt: new Date().toISOString(),
+        });
+        return result.data;
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries(["post", id]);
+        setComment(""); // Clear the comment input
+        alert("Comment added successfully!");
+      },
+      onError: (error) => {
+        console.error("Comment failed:", error);
+        alert("Failed to add comment. Please try again.");
+      },
+    }
+  );
 
   if (isLoading) {
     return (
@@ -45,33 +117,44 @@ const PostDetails = () => {
     );
   }
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: post.title,
-        text: post.description,
-        url: window.location.href,
-      });
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard!");
-    }
-  };
+  const handleSubmitComment = (e) => {
+    e.preventDefault();
 
-  const handleComment = () => {
-    // Add comment functionality here
-    console.log("Comment clicked");
+    // check user login
+    if (!user) {
+      alert("Please Login");
+      navigate("/login");
+      return;
+    }
+
+    if (!comment.trim()) {
+      alert("Please write a comment");
+      return;
+    }
+
+    submitComment(comment.trim());
   };
 
   const handleUpvote = () => {
-    // Add upvote functionality here
-    console.log("Upvote clicked");
+    // check user login
+    if (!user) {
+      alert("Please Login");
+      navigate("/login");
+      return;
+    }
+
+    upvoteQuery();
   };
 
   const handleDownvote = () => {
-    // Add downvote functionality here
-    console.log("Downvote clicked");
+    // check user login
+    if (!user) {
+      alert("Please Login");
+      navigate("/login");
+      return;
+    }
+
+    downvoteQuery();
   };
 
   return (
@@ -154,23 +237,34 @@ const PostDetails = () => {
               {/* Upvote Button */}
               <button
                 onClick={handleUpvote}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-50 text-green-700 hover:bg-green-100 transition-all duration-200 group"
+                disabled={isUpvoting}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 group ${
+                  isUpvoting
+                    ? "bg-green-100 text-green-600 opacity-75 cursor-not-allowed"
+                    : "bg-green-50 text-green-700 hover:bg-green-100"
+                }`}
               >
-                <svg
-                  className="w-5 h-5 group-hover:scale-110 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 15l7-7 7 7"
-                  />
-                </svg>
+                {isUpvoting ? (
+                  <div className="w-5 h-5 animate-spin border-2 border-green-600 border-t-transparent rounded-full"></div>
+                ) : (
+                  <svg
+                    className="w-5 h-5 group-hover:scale-110 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 15l7-7 7 7"
+                    />
+                  </svg>
+                )}
                 <span className="font-semibold">{post.upVote}</span>
-                <span className="text-sm">Upvote</span>
+                <span className="text-sm">
+                  {isUpvoting ? "Voting..." : "Upvote"}
+                </span>
               </button>
 
               {/* Downvote Button */}
@@ -194,52 +288,118 @@ const PostDetails = () => {
                 <span className="font-semibold">{post.downVote}</span>
                 <span className="text-sm">Downvote</span>
               </button>
-
-              {/* Comment Button */}
-              <button
-                onClick={handleComment}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-all duration-200 group"
-              >
-                <svg
-                  className="w-5 h-5 group-hover:scale-110 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-                  />
-                </svg>
-                <span className="font-semibold">{post.commentsCount}</span>
-                <span className="text-sm">Comments</span>
-              </button>
             </div>
 
-            {/* Right side - Share button */}
-            <button
-              onClick={handleShare}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-200 group"
-            >
-              <svg
-                className="w-5 h-5 group-hover:scale-110 transition-transform"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
-                />
-              </svg>
-              <span className="text-sm">Share</span>
-            </button>
+            <div className="space-x-2">
+              <TelegramShareButton url={window.location.href}>
+                <TelegramIcon size={26}></TelegramIcon>
+              </TelegramShareButton>
+              <FacebookShareButton url={window.location.href}>
+                <FacebookIcon size={26}></FacebookIcon>
+              </FacebookShareButton>
+              <WhatsappShareButton url={window.location.href}>
+                <WhatsappIcon size={26}></WhatsappIcon>
+              </WhatsappShareButton>
+            </div>
           </div>
         </div>
+
+        {/* Comment Section */}
+        <div className="px-6 py-6 border-t border-gray-200 bg-gray-50">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Add a Comment
+          </h3>
+
+          <form onSubmit={handleSubmitComment} className="space-y-4">
+            <div>
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Write your comment here..."
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                rows="4"
+                maxLength="500"
+              />
+              <div className="text-right text-xs text-gray-500 mt-1">
+                {comment.length}/500 characters
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-gray-600">
+                {!user && (
+                  <span className="text-red-600">Please login to comment</span>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={!comment.trim() || isSubmittingComment || !user}
+                className={`px-6 py-2 rounded-lg font-semibold transition-all duration-200 ${
+                  !comment.trim() || isSubmittingComment || !user
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-blue-600 text-white hover:bg-blue-700 transform hover:scale-105"
+                }`}
+              >
+                {isSubmittingComment ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 animate-spin border-2 border-white border-t-transparent rounded-full"></div>
+                    Posting...
+                  </span>
+                ) : (
+                  "Post Comment"
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Comments List */}
+        {post.comments && post.comments.length > 0 && (
+          <div className="px-6 py-6 border-t border-gray-200 bg-white">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Comments ({post.comments.length})
+            </h3>
+            <ul className="space-y-4">
+              {post.comments.map((comment, idx) => (
+                <li key={idx} className="flex items-start gap-3">
+                  <img
+                    src={
+                      comment.authorImage ||
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                        comment.authorName || "User"
+                      )}&background=0d8abc&color=fff`
+                    }
+                    alt={comment.authorName || "User"}
+                    className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-semibold text-gray-800">
+                        {comment.authorName || "Anonymous"}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {comment.createdAt &&
+                          new Date(comment.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                      </span>
+                    </div>
+                    <p className="text-gray-700 leading-relaxed">
+                      {comment.content}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );
