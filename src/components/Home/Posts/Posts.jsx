@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 import useDBUser from "../../../hooks/useDBUser";
 import { useSearch } from "../../../hooks/useFilter";
@@ -6,9 +7,12 @@ const Posts = () => {
   const { posts } = useSearch();
   const { user } = useAuth();
   const { data } = useDBUser(user.uid);
+  const navigate = useNavigate();
   console.log(data);
+
+
   return (
-    <div className="max-w-6xl mx-auto p-4">
+    <div className="max-w-6xl mx-auto p-4 mt-5">
       <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
         All Posts
       </h2>
@@ -16,6 +20,7 @@ const Posts = () => {
         {posts &&
           posts.map((post) => (
             <div
+              onClick={() => navigate(`posts/${post._id}`)}
               key={post._id}
               className="bg-white rounded-xl shadow-lg hover:shadow-2xl hover:scale-102 transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer"
             >
