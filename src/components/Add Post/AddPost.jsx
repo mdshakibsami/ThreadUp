@@ -149,7 +149,6 @@ const AddPost = () => {
         title: data.title,
         description: data.description,
         tags: selectedTags, // Array of tags
-        tag: selectedTags[0], // First tag as primary (for backward compatibility)
         authorName: user.displayName,
         authorEmail: user.email,
         authorImage:

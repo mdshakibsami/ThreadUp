@@ -1,10 +1,6 @@
 import { axiosSecure } from "../hooks/useAxiosSecure";
 
-// // all post
-// export const fetchPosts = async () => {
-//   const response = await axiosSecure.get("/posts");
-//   return response.data;
-// };
+
 
 // post by search
 export const searchFilteredPosts = async ({ queryKey }) => {

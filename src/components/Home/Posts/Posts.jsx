@@ -2,23 +2,130 @@ import { useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 import useDBUser from "../../../hooks/useDBUser";
 import { useSearch } from "../../../hooks/useFilter";
+import { useState, useEffect } from "react";
 
 const Posts = () => {
-  const { posts } = useSearch();
+  const { posts, tag } = useSearch();
   const { user } = useAuth();
-  const { data } = useDBUser(user.uid);
+  const { data } = useDBUser(user?.uid);
   const navigate = useNavigate();
+  const [sortBy, setSortBy] = useState("default");
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 6;
+
   console.log(data);
 
+  // Reset pagination when tag changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [tag]);
+
+  // Sort posts based on popularity (upVote - downVote)
+  const getSortedPosts = () => {
+    if (!posts) return [];
+
+    // First filter by tag if a tag is selected
+    let filteredPosts = posts;
+    if (tag && tag !== "All") {
+      filteredPosts = posts.filter((post) => {
+        if (post.tags && Array.isArray(post.tags)) {
+          return post.tags.some(
+            (postTag) => postTag.toLowerCase() === tag.toLowerCase()
+          );
+        }
+        // Fallback for single tag (backward compatibility)
+        if (post.tag) {
+          return post.tag.toLowerCase() === tag.toLowerCase();
+        }
+        return false;
+      });
+    }
+
+    // Then sort if popularity sort is selected
+    if (sortBy === "popularity") {
+      return [...filteredPosts].sort((a, b) => {
+        const popularityA = (a.upVote || 0) - (a.downVote || 0);
+        const popularityB = (b.upVote || 0) - (b.downVote || 0);
+        return popularityB - popularityA; // Descending order
+      });
+    }
+
+    return filteredPosts; // Default order with tag filtering
+  };
+
+  const sortedPosts = getSortedPosts();
+
+  // Pagination logic
+  const totalPosts = sortedPosts.length;
+  const totalPages = Math.ceil(totalPosts / postsPerPage);
+  const startIndex = (currentPage - 1) * postsPerPage;
+  const endIndex = startIndex + postsPerPage;
+  const currentPosts = sortedPosts.slice(startIndex, endIndex);
+
+  // Pagination handlers
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-4 mt-5">
-      <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-        All Posts
-      </h2>
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+        <div>
+          <h2 className="text-3xl font-bold text-gray-800">
+            {tag && tag !== "All" ? `Posts tagged with #${tag}` : "All Posts"}
+          </h2>
+        </div>
+
+        {/* Sort Controls */}
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-600 font-medium">Sort by:</span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                setSortBy("default");
+                setCurrentPage(1);
+              }}
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                sortBy === "default"
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Default
+            </button>
+            <button
+              onClick={() => {
+                setSortBy("popularity");
+                setCurrentPage(1);
+              }}
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
+                sortBy === "popularity"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md transform scale-105"
+                  : "bg-gray-100 text-gray-700 hover:bg-gradient-to-r hover:from-purple-100 hover:to-pink-100 hover:text-purple-700"
+              }`}
+            >
+              <span>🔥</span>
+              Popularity
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {posts &&
-          posts.map((post) => (
+        {currentPosts &&
+          currentPosts.map((post) => (
             <div
               onClick={() => navigate(`posts/${post._id}`)}
               key={post._id}
@@ -107,7 +214,7 @@ const Posts = () => {
                   <div className="flex items-center gap-1">
                     <span className="text-blue-600">💬</span>
                     <span className="text-sm font-semibold text-gray-700">
-                      {post.commentsCount}
+                      {post.comments.length}
                     </span>
                     <span className="text-xs text-gray-500">comments</span>
                   </div>
@@ -116,6 +223,83 @@ const Posts = () => {
             </div>
           ))}
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center mt-8 gap-2">
+          {/* Previous Button */}
+          <button
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+              currentPage === 1
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+            }`}
+          >
+            Previous
+          </button>
+
+          {/* Page Numbers */}
+          <div className="flex gap-1">
+            {Array.from({ length: totalPages }, (_, index) => {
+              const pageNumber = index + 1;
+              const isCurrentPage = pageNumber === currentPage;
+
+              // Show first page, last page, current page, and pages around current page
+              const showPage =
+                pageNumber === 1 ||
+                pageNumber === totalPages ||
+                Math.abs(pageNumber - currentPage) <= 1;
+
+              // Show ellipsis
+              const showEllipsis =
+                (pageNumber === 2 && currentPage > 4) ||
+                (pageNumber === totalPages - 1 && currentPage < totalPages - 3);
+
+              if (!showPage && !showEllipsis) return null;
+
+              if (showEllipsis) {
+                return (
+                  <span
+                    key={`ellipsis-${pageNumber}`}
+                    className="px-2 py-2 text-gray-400"
+                  >
+                    ...
+                  </span>
+                );
+              }
+
+              return (
+                <button
+                  key={pageNumber}
+                  onClick={() => handlePageClick(pageNumber)}
+                  className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    isCurrentPage
+                      ? "bg-blue-600 text-white shadow-md"
+                      : "bg-white text-gray-700 border border-gray-300 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-600"
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Next Button */}
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+              currentPage === totalPages
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

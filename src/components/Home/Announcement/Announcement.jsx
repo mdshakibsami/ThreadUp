@@ -18,7 +18,7 @@ const announcementPost = {
 
 const Announcement = () => {
   return (
-    <div>
+    <div className="mt-10">
       <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
         Announcements
       </h2>
