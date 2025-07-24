@@ -7,6 +7,8 @@ import Register from "../components/Auth/Register";
 import Dashboard from "../pages/Dashboard";
 import AddPost from "../components/Add Post/AddPost";
 import PostDetails from "../components/Home/Posts/PostDetails";
+import MyProfile from "../components/dashboard/MyProfile";
+import MyPosts from "../components/dashboard/MyPosts";
 
 export const router = createBrowserRouter([
   {
@@ -37,11 +39,24 @@ export const router = createBrowserRouter([
         path: "posts/:id",
         Component: PostDetails,
       },
-     
     ],
   },
   {
     path: "/dashboard",
     Component: Dashboard,
+    children: [
+      {
+        path: "/dashboard/my-profile",
+        Component: MyProfile,
+      },
+      {
+        path: "/dashboard/add-post",
+        Component: AddPost,
+      },
+      {
+        path: "/dashboard/my-posts",
+        Component: MyPosts,
+      },
+    ],
   },
 ]);
