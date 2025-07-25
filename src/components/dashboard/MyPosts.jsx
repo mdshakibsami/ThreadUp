@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAuth from "../../hooks/useAuth";
 import { axiosSecure } from "../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
+import { Link } from "react-router";
 
 const MyPosts = () => {
   const { user } = useAuth();
@@ -169,13 +170,13 @@ const MyPosts = () => {
 
                     {/* Comment Button */}
                     <td className="px-6 py-4">
-                      <button
+                      <Link to={`/dashboard/comments/${post._id}`}
                         className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
                         title="View Comments"
                       >
                         <span className="text-blue-600">💬</span>
                         Comments ({post.comments?.length || 0})
-                      </button>
+                      </Link>
                     </td>
 
                     {/* Delete Button */}

@@ -10,6 +10,11 @@ import PostDetails from "../components/Home/Posts/PostDetails";
 import MyProfile from "../components/dashboard/MyProfile";
 import MyPosts from "../components/dashboard/MyPosts";
 import Payment from "../components/payment/Payment";
+import Comments from "../components/dashboard/Comments";
+import AdminProfile from "../components/dashboard/AdminProfile";
+import ManageUser from "../components/dashboard/ManageUser";
+import ReportedComments from "../components/dashboard/ReportedComments";
+import MakeAnnouncements from "../components/dashboard/MakeAnnouncements";
 
 export const router = createBrowserRouter([
   {
@@ -47,7 +52,7 @@ export const router = createBrowserRouter([
     Component: Dashboard,
     children: [
       {
-        path: "/dashboard/my-profile",
+        index: true,
         Component: MyProfile,
       },
       {
@@ -57,6 +62,26 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/my-posts",
         Component: MyPosts,
+      },
+      {
+        path: "/dashboard/admin-profile",
+        Component: AdminProfile,
+      },
+      {
+        path: "/dashboard/manage-users",
+        Component: ManageUser,
+      },
+      {
+        path: "/dashboard/reported-comments",
+        Component: ReportedComments,
+      },
+      {
+        path: "/dashboard/announcements",
+        Component: MakeAnnouncements,
+      },
+      {
+        path: "/dashboard/comments/:id",
+        Component: Comments,
       },
     ],
   },

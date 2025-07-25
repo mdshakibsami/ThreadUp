@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 import useAuth from "../hooks/useAuth";
 import { FaUserCircle, FaPlusCircle } from "react-icons/fa";
+import useDBUser from "../hooks/useDBUser";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const { data: dbUser } = useDBUser(user?.uid);
+  console.log(dbUser);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -89,7 +93,7 @@ const Dashboard = () => {
               <ul className="space-y-3">
                 <li>
                   <Link
-                    to="/dashboard/my-profile"
+                    to="/dashboard"
                     onClick={() => setIsSidebarOpen(false)}
                     className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:shadow-md group"
                   >
@@ -119,6 +123,53 @@ const Dashboard = () => {
                     <span className="font-medium">My Posts</span>
                   </Link>
                 </li>
+                {dbUser?.isAdmin && (
+                  <>
+                    <Link
+                      to="/dashboard/admin-profile"
+                      onClick={() => setIsSidebarOpen(false)}
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 text-gray-700 hover:bg-purple-50 hover:text-purple-600 hover:shadow-md group"
+                    >
+                      <span className="text-xl group-hover:scale-110 transition-transform duration-200">
+                        🛡️
+                      </span>
+                      <span className="font-medium">Admin Profile</span>
+                    </Link>
+
+                    <Link
+                      to="/dashboard/manage-users"
+                      onClick={() => setIsSidebarOpen(false)}
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 text-gray-700 hover:bg-purple-50 hover:text-purple-600 hover:shadow-md group"
+                    >
+                      <span className="text-xl group-hover:scale-110 transition-transform duration-200">
+                        👥
+                      </span>
+                      <span className="font-medium">Manage Users</span>
+                    </Link>
+
+                    <Link
+                      to="/dashboard/reported-comments"
+                      onClick={() => setIsSidebarOpen(false)}
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 text-gray-700 hover:bg-purple-50 hover:text-purple-600 hover:shadow-md group"
+                    >
+                      <span className="text-xl group-hover:scale-110 transition-transform duration-200">
+                        🚩
+                      </span>
+                      <span className="font-medium">Reported Comments</span>
+                    </Link>
+
+                    <Link
+                      to="/dashboard/announcements"
+                      onClick={() => setIsSidebarOpen(false)}
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 text-gray-700 hover:bg-purple-50 hover:text-purple-600 hover:shadow-md group"
+                    >
+                      <span className="text-md group-hover:scale-110 transition-transform duration-200">
+                        📢
+                      </span>
+                      <span className="font-medium">Make Announcement</span>
+                    </Link>
+                  </>
+                )}
               </ul>
             </nav>
           </div>
