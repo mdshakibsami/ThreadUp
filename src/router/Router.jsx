@@ -9,6 +9,7 @@ import AddPost from "../components/Add Post/AddPost";
 import PostDetails from "../components/Home/Posts/PostDetails";
 import MyProfile from "../components/dashboard/MyProfile";
 import MyPosts from "../components/dashboard/MyPosts";
+import Payment from "../components/payment/Payment";
 
 export const router = createBrowserRouter([
   {
@@ -20,8 +21,8 @@ export const router = createBrowserRouter([
         Component: Home,
       },
       {
-        path: "about",
-        Component: About,
+        path: "/member",
+        Component: Payment,
       },
       {
         path: "login",

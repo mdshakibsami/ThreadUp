@@ -3,10 +3,14 @@ import { Link, NavLink } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import "../Auth/sweetalert-custom.css";
+import useDBUser from "../../hooks/useDBUser";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
   const notificationCount = 3; // This would come from your notification state/API
+
+  const { data: dbUser } = useDBUser(user?.uid);
+  console.log(dbUser);
 
   const handleLogout = () => {
     Swal.fire({
@@ -127,9 +131,14 @@ const Navbar = () => {
       <div className="navbar-end space-x-2">
         {user ? (
           <>
-            <Link to="/member" className="btn text-white bg-[#f73395] hover:scale-101">
-              Be a Member
-            </Link>
+            {!dbUser?.isMember && (
+              <Link
+                to="/member"
+                className="btn text-white bg-[#f73395] hover:scale-101"
+              >
+                Be a Member
+              </Link>
+            )}
             {/* Notification Icon */}
             <button className="btn btn-ghost btn-circle">
               <div className="indicator">
