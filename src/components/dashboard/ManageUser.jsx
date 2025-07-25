@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosSecure } from "../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 
 const ManageUser = () => {
   const queryClient = useQueryClient();
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["allUsers"],
@@ -17,10 +18,19 @@ const ManageUser = () => {
   console.log("All users:", data);
   const allUsers = data?.users || [];
 
+  // Filter users based on search term
+  const filteredUsers = allUsers.filter(
+    (user) =>
+      user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.role?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   // Mutation for making user admin
   const makeAdminMutation = useMutation({
     mutationFn: async (userId) => {
       const response = await axiosSecure.patch(`/make-admin/${userId}`);
+      console.log("from the reqponse", response.data);
       return response.data;
     },
     onSuccess: () => {
@@ -81,13 +91,64 @@ const ManageUser = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-gray-800">Manage Users</h2>
-        <p className="text-gray-600 mt-1">
-          Total Users: {allUsers?.length || 0}
-        </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-800">Manage Users</h2>
+            <p className="text-gray-600 mt-1">
+              Total Users: {allUsers?.length || 0} | Showing:{" "}
+              {filteredUsers?.length || 0}
+            </p>
+          </div>
+
+          {/* Search Input */}
+          <div className="relative max-w-md w-full sm:w-auto">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg
+                className="h-5 w-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+            <input
+              type="text"
+              placeholder="Search by name, email, or role..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              >
+                <svg
+                  className="h-4 w-4 text-gray-400 hover:text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
-      {allUsers && allUsers.length > 0 ? (
+      {filteredUsers && filteredUsers.length > 0 ? (
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -108,7 +169,7 @@ const ManageUser = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {allUsers.map((user, index) => (
+                {filteredUsers.map((user, index) => (
                   <tr
                     key={user._id || index}
                     className="hover:bg-gray-50 transition-colors"
@@ -219,13 +280,36 @@ const ManageUser = () => {
         </div>
       ) : (
         <div className="text-center py-12">
-          <div className="text-6xl mb-4">👥</div>
+          <div className="text-6xl mb-4">{searchTerm ? "�" : "�👥"}</div>
           <h3 className="text-xl font-bold text-gray-800 mb-2">
-            No users found
+            {searchTerm ? "No users match your search" : "No users found"}
           </h3>
           <p className="text-gray-600 mb-6">
-            There are no users to display at the moment.
+            {searchTerm
+              ? `No users found for "${searchTerm}". Try a different search term.`
+              : "There are no users to display at the moment."}
           </p>
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+            >
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+              Clear Search
+            </button>
+          )}
         </div>
       )}
     </div>
