@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import RootLayout from "../layouts/RootLayout";
 import Home from "../pages/Home";
-import About from "../components/About/About";
 import Login from "../components/Auth/Login";
 import Register from "../components/Auth/Register";
 import Dashboard from "../pages/Dashboard";
@@ -15,6 +14,9 @@ import AdminProfile from "../components/dashboard/AdminProfile";
 import ManageUser from "../components/dashboard/ManageUser";
 import ReportedComments from "../components/dashboard/ReportedComments";
 import MakeAnnouncements from "../components/dashboard/MakeAnnouncements";
+import PrivateRouter from "../private/PrivateRouter";
+import Forbidden from "../components/404 page/Forbidden";
+import AdminRoute from "../private/AdminRoute";
 
 export const router = createBrowserRouter([
   {
@@ -27,33 +29,45 @@ export const router = createBrowserRouter([
       },
       {
         path: "/member",
-        Component: Payment,
+        element: (
+          <PrivateRouter>
+            <Payment></Payment>
+          </PrivateRouter>
+        ),
       },
       {
         path: "login",
         Component: Login,
       },
       {
+        path: "forbidden",
+        Component: Forbidden,
+      },
+      {
         path: "register",
         Component: Register,
       },
       {
-        path: "add-post",
-        Component: AddPost,
-      },
-      {
         path: "posts/:id",
-        Component: PostDetails,
+        element:<PrivateRouter><PostDetails></PostDetails></PrivateRouter>
       },
     ],
   },
   {
     path: "/dashboard",
-    Component: Dashboard,
+    element: (
+      <PrivateRouter>
+        <Dashboard></Dashboard>
+      </PrivateRouter>
+    ),
     children: [
       {
         index: true,
         Component: MyProfile,
+      },
+      {
+        path: "/dashboard/comments/:id",
+        Component: Comments,
       },
       {
         path: "/dashboard/add-post",
@@ -65,23 +79,35 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/admin-profile",
-        Component: AdminProfile,
+        element: (
+          <AdminRoute>
+            <AdminProfile></AdminProfile>
+          </AdminRoute>
+        ),
       },
       {
         path: "/dashboard/manage-users",
-        Component: ManageUser,
+        element: (
+          <AdminRoute>
+            <ManageUser></ManageUser>
+          </AdminRoute>
+        ),
       },
       {
         path: "/dashboard/reported-comments",
-        Component: ReportedComments,
+        element: (
+          <AdminRoute>
+            <ReportedComments></ReportedComments>
+          </AdminRoute>
+        ),
       },
       {
         path: "/dashboard/announcements",
-        Component: MakeAnnouncements,
-      },
-      {
-        path: "/dashboard/comments/:id",
-        Component: Comments,
+        element: (
+          <AdminRoute>
+            <MakeAnnouncements></MakeAnnouncements>
+          </AdminRoute>
+        ),
       },
     ],
   },

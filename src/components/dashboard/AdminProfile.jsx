@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { axiosSecure } from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
@@ -18,7 +18,6 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale);
 
 const AdminProfile = () => {
   const { user } = useAuth();
-  const queryClient = useQueryClient();
   const [tagName, setTagName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 

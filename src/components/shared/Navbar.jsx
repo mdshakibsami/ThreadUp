@@ -85,12 +85,6 @@ const Navbar = () => {
       <li>
         <Link to="/dashboard">Dashboard</Link>
       </li>
-      <li>
-        <NavLink to="/add-post">Create Post</NavLink>
-      </li>
-      <li>
-        <NavLink to="/about">About</NavLink>
-      </li>
     </>
   );
   return (

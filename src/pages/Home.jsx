@@ -15,6 +15,6 @@ const Home = () => {
       </SearchProvider>
     </div>
   );
-}
+};
 
 export default Home;

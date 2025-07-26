@@ -9,21 +9,33 @@ const MyProfile = () => {
   const { user } = useAuth();
   const { data: dbUser } = useDBUser(user?.uid);
   const navigate = useNavigate();
-  // console.log("data from userdb", dbUser);
 
   const email = user?.email;
-  console.log(email);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["userPosts", email],
     queryFn: async () => {
       if (!email) throw new Error("Email is required");
-
       const res = await axiosSecure.get(`/three-posts?email=${email}`);
       return res.data;
     },
     enabled: !!email,
   });
+
+  // Fetch user's post count
+  const { data: postCountData, isLoading: postCountLoading } = useQuery({
+    queryKey: ["userPostCount", email],
+    queryFn: async () => {
+      if (!email) throw new Error("Email is required");
+      const res = await axiosSecure.get(
+        `/user-post-count?email=${encodeURIComponent(email)}`
+      );
+      return res.data;
+    },
+    enabled: !!email,
+  });
+
   console.log("these are ", data?.posts);
+  console.log("User post count data:", postCountData);
   const threeePosts = data?.posts || [];
 
   // Get user data from database or use defaults
@@ -36,7 +48,7 @@ const MyProfile = () => {
           month: "long",
         })
       : "January 2024",
-    postsCount: dbUser?.postCount || 0,
+    postsCount: postCountData?.postCount || dbUser?.postCount || 0,
     role: dbUser?.role,
   };
 
@@ -75,9 +87,13 @@ const MyProfile = () => {
             <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-4">
               <div className="bg-blue-50 px-4 py-2 rounded-lg">
                 <span className="text-blue-600 font-semibold">Posts: </span>
-                <span className="text-gray-800 font-bold">
-                  {userData.postsCount}
-                </span>
+                {postCountLoading ? (
+                  <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent"></div>
+                ) : (
+                  <span className="text-gray-800 font-bold">
+                    {userData.postsCount}
+                  </span>
+                )}
               </div>
               <div className="bg-green-50 px-4 py-2 rounded-lg">
                 <span className="text-green-600 font-semibold">Badge: </span>

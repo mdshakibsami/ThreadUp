@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { axiosSecure } from "../../../hooks/useAxiosSecure";
 import { useSearch } from "../../../hooks/useFilter";
+import { axiosPublic } from "../../../hooks/useAxios";
 
 const Tags = () => {
   const [selectedTag, setSelectedTag] = useState(null);
@@ -11,7 +11,7 @@ const Tags = () => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["tags"],
     queryFn: async () => {
-      const response = await axiosSecure.get("/tags");
+      const response = await axiosPublic.get("/tags");
       return response.data;
     },
   });
