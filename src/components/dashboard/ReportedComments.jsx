@@ -23,7 +23,7 @@ const ReportedComments = () => {
   // Mutation for deleting comment
   const deleteCommentMutation = useMutation({
     mutationFn: async (commentId) => {
-      const response = await axiosSecure.delete(`/comments/${commentId}`);
+      const response = await axiosSecure.delete(`/reported-comments/delete/${commentId}`);
       return response.data;
     },
     onSuccess: () => {
@@ -51,11 +51,8 @@ const ReportedComments = () => {
   // Mutation for keeping comment (update status)
   const keepCommentMutation = useMutation({
     mutationFn: async (reportId) => {
-      const response = await axiosSecure.patch(
-        `/reported-comments/${reportId}/status`,
-        {
-          status: "reviewed",
-        }
+      const response = await axiosSecure.delete(
+        `/reported-comments/${reportId}`,
       );
       return response.data;
     },
@@ -81,7 +78,7 @@ const ReportedComments = () => {
     },
   });
 
-  const handleDeleteComment = async (commentId, reportedText) => {
+  const handleDeleteComment = async (reportId, reportedText) => {
     const result = await Swal.fire({
       title: "Delete Comment?",
       text: `Are you sure you want to delete this comment: "${
@@ -96,7 +93,7 @@ const ReportedComments = () => {
     });
 
     if (result.isConfirmed) {
-      deleteCommentMutation.mutate(commentId);
+      deleteCommentMutation.mutate(reportId);
     }
   };
 
@@ -251,7 +248,7 @@ const ReportedComments = () => {
                           title="Delete Comment"
                           onClick={() =>
                             handleDeleteComment(
-                              comment.commentId,
+                              comment._id,
                               comment.reportedText
                             )
                           }

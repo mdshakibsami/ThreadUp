@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import { axiosSecure } from "../../../hooks/useAxiosSecure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAuth from "../../../hooks/useAuth";
+import Swal from "sweetalert2";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -49,7 +50,13 @@ const PostDetails = () => {
     },
     onError: (error) => {
       console.error("Upvote failed:", error);
-      alert("Failed to upvote. Please try again.");
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to upvote. Please try again.",
+        icon: "error",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#EF4444",
+      });
     },
   });
 
@@ -66,7 +73,13 @@ const PostDetails = () => {
     },
     onError: (error) => {
       console.error("Downvote failed:", error);
-      alert("Failed to Downvote. Please try again.");
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to downvote. Please try again.",
+        icon: "error",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#EF4444",
+      });
     },
   });
 
@@ -85,11 +98,23 @@ const PostDetails = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(["post", id]);
         setComment(""); // Clear the comment input
-        alert("Comment added successfully!");
+        Swal.fire({
+          title: "Success!",
+          text: "Comment added successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#10B981",
+        });
       },
       onError: (error) => {
         console.error("Comment failed:", error);
-        alert("Failed to add comment. Please try again.");
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to add comment. Please try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#EF4444",
+        });
       },
     }
   );
@@ -122,13 +147,28 @@ const PostDetails = () => {
 
     // check user login
     if (!user) {
-      alert("Please Login");
-      navigate("/login");
+      Swal.fire({
+        title: "Login Required",
+        text: "Please login to add a comment.",
+        icon: "warning",
+        confirmButtonText: "Go to Login",
+        confirmButtonColor: "#3B82F6",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        }
+      });
       return;
     }
 
     if (!comment.trim()) {
-      alert("Please write a comment");
+      Swal.fire({
+        title: "Empty Comment",
+        text: "Please write a comment before submitting.",
+        icon: "warning",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#F59E0B",
+      });
       return;
     }
 
@@ -138,8 +178,17 @@ const PostDetails = () => {
   const handleUpvote = () => {
     // check user login
     if (!user) {
-      alert("Please Login");
-      navigate("/login");
+      Swal.fire({
+        title: "Login Required",
+        text: "Please login to upvote this post.",
+        icon: "warning",
+        confirmButtonText: "Go to Login",
+        confirmButtonColor: "#3B82F6",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        }
+      });
       return;
     }
 
@@ -149,8 +198,17 @@ const PostDetails = () => {
   const handleDownvote = () => {
     // check user login
     if (!user) {
-      alert("Please Login");
-      navigate("/login");
+      Swal.fire({
+        title: "Login Required",
+        text: "Please login to downvote this post.",
+        icon: "warning",
+        confirmButtonText: "Go to Login",
+        confirmButtonColor: "#3B82F6",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        }
+      });
       return;
     }
 

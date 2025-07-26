@@ -161,7 +161,7 @@ const ManageUser = () => {
                     Role & Status
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Activity
+                    Joined
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
@@ -228,24 +228,21 @@ const ManageUser = () => {
                       </div>
                     </td>
 
-                    {/* Activity */}
+                    {/* Joined Date */}
                     <td className="px-6 py-4">
-                      <div className="text-sm space-y-1">
-                        <p className="text-gray-700">
-                          Posts: {user.postCount || 0}
+                      <div className="text-sm">
+                        <p className="text-gray-900">
+                          {user.createdAt
+                            ? new Date(user.createdAt).toLocaleDateString(
+                                "en-US",
+                                {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                }
+                              )
+                            : "N/A"}
                         </p>
-                        {user.createdAt && (
-                          <p className="text-gray-500 text-xs">
-                            Joined:{" "}
-                            {new Date(user.createdAt).toLocaleDateString()}
-                          </p>
-                        )}
-                        {user.last_log_in && (
-                          <p className="text-gray-500 text-xs">
-                            Last login:{" "}
-                            {new Date(user.last_log_in).toLocaleDateString()}
-                          </p>
-                        )}
                       </div>
                     </td>
 
