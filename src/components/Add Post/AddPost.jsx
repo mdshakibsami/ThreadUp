@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
 import { axiosSecure } from "../../hooks/useAxiosSecure";
@@ -17,34 +18,19 @@ const AddPost = () => {
   const [imageURL, setImageURL] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
 
-  // Tag options for select dropdown
-  const tagOptions = [
-    "JavaScript",
-    "React",
-    "Python",
-    "Health",
-    "AI",
-    "Fitness",
-    "Art",
-    "WebDev",
-    "Photography",
-    "Food",
-    "Writing",
-    "Travel",
-    "DevOps",
-    "Music",
-    "Fashion",
-    "Design",
-    "Mindfulness",
-    "DIY",
-    "Gaming",
-    "Business",
-    "Sports",
-    "Technology",
-    "Books",
-    "Movies",
-    "Education",
-  ];
+  // Fetch tags using TanStack Query
+  const { data: tagsData, isLoading: tagsLoading, isError: tagsError } = useQuery({
+    queryKey: ["tags"],
+    queryFn: async () => {
+      const response = await axiosSecure.get("/tags");
+      return response.data;
+    },
+  });
+
+  console.log("Fetched tags data:", tagsData);
+
+  // Extract tags from the response (based on API structure: { success: true, tags: [...] })
+  const tagOptions = tagsData?.tags?.map(tag => tag.name) || [];
 
   // Handle tag selection
   const handleTagToggle = (tag) => {
@@ -394,25 +380,40 @@ const AddPost = () => {
               )}
 
               {/* Tag Options Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 max-h-60 overflow-y-auto">
-                {tagOptions.map((tag) => {
-                  const isSelected = selectedTags.includes(tag.toLowerCase());
-                  return (
-                    <button
-                      key={tag}
-                      type="button"
-                      onClick={() => handleTagToggle(tag)}
-                      className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                        isSelected
-                          ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg scale-105"
-                          : "bg-white text-purple-700 border border-purple-200 hover:bg-purple-100 hover:border-purple-300"
-                      }`}
-                    >
-                      {tag}
-                    </button>
-                  );
-                })}
-              </div>
+              {tagsLoading ? (
+                <div className="flex justify-center items-center p-8 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+                  <span className="ml-3 text-purple-600 font-medium">Loading tags...</span>
+                </div>
+              ) : tagsError ? (
+                <div className="p-4 bg-red-50 rounded-lg border border-red-200">
+                  <p className="text-red-600 font-medium">Failed to load tags. Please try again.</p>
+                </div>
+              ) : tagOptions.length === 0 ? (
+                <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                  <p className="text-yellow-600 font-medium">No tags available. Please contact admin to add tags.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 max-h-60 overflow-y-auto">
+                  {tagOptions.map((tag) => {
+                    const isSelected = selectedTags.includes(tag.toLowerCase());
+                    return (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => handleTagToggle(tag)}
+                        className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                          isSelected
+                            ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg scale-105"
+                            : "bg-white text-purple-700 border border-purple-200 hover:bg-purple-100 hover:border-purple-300"
+                        }`}
+                      >
+                        {tag}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
               {selectedTags.length === 0 && (
                 <p className="mt-2 text-sm text-red-600 font-medium">

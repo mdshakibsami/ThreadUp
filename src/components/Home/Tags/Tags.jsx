@@ -1,38 +1,47 @@
 import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { axiosSecure } from "../../../hooks/useAxiosSecure";
 import { useSearch } from "../../../hooks/useFilter";
 
 const Tags = () => {
   const [selectedTag, setSelectedTag] = useState(null);
   const { setTag } = useSearch();
 
-  // Tags array with trending tags
-  const trendingTags = [
-    { name: "JavaScript", color: "bg-yellow-100 text-yellow-800" },
-    { name: "React", color: "bg-blue-100 text-blue-800" },
-    { name: "Python", color: "bg-green-100 text-green-800" },
-    { name: "Health", color: "bg-green-100 text-green-800" },
-    { name: "AI", color: "bg-purple-100 text-purple-800" },
-    { name: "Fitness", color: "bg-red-100 text-red-800" },
-    { name: "Art", color: "bg-red-100 text-red-800" },
-    { name: "WebDev", color: "bg-indigo-100 text-indigo-800" },
-    { name: "Photography", color: "bg-yellow-100 text-yellow-800" },
-    { name: "Food", color: "bg-orange-100 text-orange-800" },
-    { name: "Writing", color: "bg-blue-100 text-blue-800" },
-    { name: "Travel", color: "bg-blue-100 text-blue-800" },
-    { name: "DevOps", color: "bg-gray-100 text-gray-800" },
-    { name: "Music", color: "bg-purple-100 text-purple-800" },
-    { name: "Fashion", color: "bg-pink-100 text-pink-800" },
-    { name: "Design", color: "bg-pink-100 text-pink-800" },
-    { name: "Mindfulness", color: "bg-purple-100 text-purple-800" },
-    { name: "DIY", color: "bg-green-100 text-green-800" },
-    { name: "Gaming", color: "bg-indigo-100 text-indigo-800" },
-    { name: "Business", color: "bg-gray-100 text-gray-800" },
-    { name: "Sports", color: "bg-blue-100 text-blue-800" },
-    { name: "Technology", color: "bg-cyan-100 text-cyan-800" },
-    { name: "Books", color: "bg-amber-100 text-amber-800" },
-    { name: "Movies", color: "bg-red-100 text-red-800" },
-    { name: "Education", color: "bg-emerald-100 text-emerald-800" },
+  // Fetch tags using TanStack Query
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["tags"],
+    queryFn: async () => {
+      const response = await axiosSecure.get("/tags");
+      return response.data;
+    },
+  });
+
+  console.log("Fetched tags data:", data);
+
+  // Extract tags from the response (based on API structure: { success: true, tags: [...] })
+  const tags = data?.tags || [];
+
+  // Color array for tags
+  const tagColors = [
+    "bg-yellow-100 text-yellow-800",
+    "bg-blue-100 text-blue-800",
+    "bg-green-100 text-green-800",
+    "bg-purple-100 text-purple-800",
+    "bg-red-100 text-red-800",
+    "bg-indigo-100 text-indigo-800",
+    "bg-orange-100 text-orange-800",
+    "bg-gray-100 text-gray-800",
+    "bg-pink-100 text-pink-800",
+    "bg-cyan-100 text-cyan-800",
+    "bg-amber-100 text-amber-800",
+    "bg-emerald-100 text-emerald-800",
   ];
+
+  // Assign colors to tags
+  const tagsWithColors = tags.map((tag, index) => ({
+    ...tag,
+    color: tagColors[index % tagColors.length],
+  }));
 
   const handleTagClick = (tagName) => {
     setSelectedTag(tagName);
@@ -43,6 +52,39 @@ const Tags = () => {
       console.log(`Filtering posts with tag: ${tagName}`);
     }
   };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-800 mb-4">
+            Trending Tags
+          </h2>
+        </div>
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+          <span className="ml-4 text-gray-600">Loading tags...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (isError) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-800 mb-4">
+            Trending Tags
+          </h2>
+        </div>
+        <div className="text-center text-red-600 py-12">
+          <p>Error loading tags: {error?.message || "Please try again."}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
@@ -67,9 +109,9 @@ const Tags = () => {
           </button>
 
           {/* Individual Tags */}
-          {trendingTags.map((tag) => (
+          {tagsWithColors.map((tag) => (
             <button
-              key={`trending-${tag.name}`}
+              key={`trending-${tag._id || tag.id || tag.name}`}
               onClick={() => handleTagClick(tag.name)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform ${
                 selectedTag === tag.name
