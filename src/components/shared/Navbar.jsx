@@ -136,7 +136,7 @@ const Navbar = () => {
                 to="/member"
                 className="btn text-white bg-[#f73395] hover:scale-101"
               >
-                Be a Member
+                Be The Member
               </Link>
             )}
             {/* Notification Icon */}

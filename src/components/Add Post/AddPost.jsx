@@ -4,9 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
 import { axiosSecure } from "../../hooks/useAxiosSecure";
+import useDBUser from "../../hooks/useDBUser";
+import { Link } from "react-router";
 
 const AddPost = () => {
   const { user } = useAuth();
+  const { data: dbUser } = useDBUser(user?.uid);
+  console.log("this is db user", dbUser);
   const {
     register,
     handleSubmit,
@@ -19,7 +23,11 @@ const AddPost = () => {
   const [selectedTags, setSelectedTags] = useState([]);
 
   // Fetch tags using TanStack Query
-  const { data: tagsData, isLoading: tagsLoading, isError: tagsError } = useQuery({
+  const {
+    data: tagsData,
+    isLoading: tagsLoading,
+    isError: tagsError,
+  } = useQuery({
     queryKey: ["tags"],
     queryFn: async () => {
       const response = await axiosSecure.get("/tags");
@@ -27,10 +35,24 @@ const AddPost = () => {
     },
   });
 
+  // Fetch user's post count
+  const { data: postCountData } = useQuery({
+    queryKey: ["userPostCount", user?.email],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const response = await axiosSecure.get(
+        `/user-post-count?email=${user.email}`
+      );
+      return response.data;
+    },
+    enabled: !!user?.email,
+  });
+
   console.log("Fetched tags data:", tagsData);
+  console.log("User post count data:", postCountData);
 
   // Extract tags from the response (based on API structure: { success: true, tags: [...] })
-  const tagOptions = tagsData?.tags?.map(tag => tag.name) || [];
+  const tagOptions = tagsData?.tags?.map((tag) => tag.name) || [];
 
   // Handle tag selection
   const handleTagToggle = (tag) => {
@@ -207,7 +229,7 @@ const AddPost = () => {
           <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
             Create New Post
           </h1>
-          <p className="text-lg text-gray-700 font-medium">
+          <p className="text-lg text-gray-700 font-medium mb-4">
             Share your thoughts and ideas with the community
           </p>
         </div>
@@ -383,15 +405,21 @@ const AddPost = () => {
               {tagsLoading ? (
                 <div className="flex justify-center items-center p-8 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
-                  <span className="ml-3 text-purple-600 font-medium">Loading tags...</span>
+                  <span className="ml-3 text-purple-600 font-medium">
+                    Loading tags...
+                  </span>
                 </div>
               ) : tagsError ? (
                 <div className="p-4 bg-red-50 rounded-lg border border-red-200">
-                  <p className="text-red-600 font-medium">Failed to load tags. Please try again.</p>
+                  <p className="text-red-600 font-medium">
+                    Failed to load tags. Please try again.
+                  </p>
                 </div>
               ) : tagOptions.length === 0 ? (
                 <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                  <p className="text-yellow-600 font-medium">No tags available. Please contact admin to add tags.</p>
+                  <p className="text-yellow-600 font-medium">
+                    No tags available. Please contact admin to add tags.
+                  </p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 max-h-60 overflow-y-auto">
@@ -423,14 +451,29 @@ const AddPost = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="flex justify-center pt-8">
-              <button
-                type="submit"
-                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-10 rounded-2xl hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-4 focus:ring-purple-300 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl border-2 border-purple-300"
-              >
-                ✨ Create Post
-              </button>
-            </div>
+            {postCountData?.postCount >= 5 && !dbUser.isMember ? (
+              <>
+                <div className="flex justify-center pt-8">
+                  <Link
+                    to="/member"
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-10 rounded-2xl hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-4 focus:ring-purple-300 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl border-2 border-purple-300"
+                  >
+                    Be The Member to Post
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex justify-center pt-8">
+                  <button
+                    type="submit"
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-10 rounded-2xl hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-4 focus:ring-purple-300 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl border-2 border-purple-300"
+                  >
+                    ✨ Create Post
+                  </button>
+                </div>
+              </>
+            )}
           </form>
         </div>
       </div>
