@@ -1,10 +1,9 @@
-import React from 'react';
+import Announcement from "../components/Home/Announcement/Announcement";
 
 const Announcements = () => {
     return (
-        <div>
-            Announcements
-            
+        <div className="bg-[#FFF5F2]">
+            <Announcement></Announcement>
         </div>
     );
 };

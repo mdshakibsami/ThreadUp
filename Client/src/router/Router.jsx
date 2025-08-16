@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
         Component: Announcements,
       },
       {
-        path: "all-post",
+        path: "all-posts",
         Component: AllPost,
       },
       {
@@ -59,7 +59,7 @@ export const router = createBrowserRouter([
         Component: Register,
       },
       {
-        path: "posts/:id",
+        path: "all-posts/:id",
         element: (
           <PrivateRouter>
             <PostDetails></PostDetails>

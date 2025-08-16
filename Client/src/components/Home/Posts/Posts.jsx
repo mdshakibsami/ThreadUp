@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import { FaThumbsUp, FaThumbsDown, FaCommentAlt } from "react-icons/fa";
 import useAuth from "../../../hooks/useAuth";
 import useDBUser from "../../../hooks/useDBUser";
 import { useSearch } from "../../../hooks/useFilter";
@@ -80,7 +81,7 @@ const Posts = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-4 mt-5">
+    <div className="sm:mx-10 mx-auto p-4">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
         <div>
           <h2 className="text-3xl font-bold text-gray-800">
@@ -123,16 +124,16 @@ const Posts = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 ">
         {currentPosts &&
           currentPosts.map((post) => (
             <div
-              onClick={() => navigate(`posts/${post._id}`)}
+              onClick={() => navigate(`/all-posts/${post._id}`)}
               key={post._id}
-              className="bg-white rounded-xl shadow-lg hover:shadow-2xl hover:scale-102 transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer"
+              className="bg-[#EEEEEE] rounded-xl shadow-lg hover:shadow-2xl hover:scale-102 transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer flex flex-col justify-between h-full"
             >
               {/* Author Section */}
-              <div className="p-6">
+              <div className="p-6 flex flex-col justify-between h-full">
                 <div className="flex items-center gap-3 mb-4">
                   <img
                     src={post.authorImage}
@@ -199,20 +200,20 @@ const Posts = () => {
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1">
-                      <span className="text-green-600">👍</span>
+                      <FaThumbsUp className="text-green-600" />
                       <span className="text-sm font-semibold text-gray-700">
                         {post.upVote}
                       </span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <span className="text-red-600">👎</span>
+                      <FaThumbsDown className="text-red-600" />
                       <span className="text-sm font-semibold text-gray-700">
                         {post.downVote}
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
-                    <span className="text-blue-600">💬</span>
+                    <FaCommentAlt className="text-blue-600" />
                     <span className="text-sm font-semibold text-gray-700">
                       {post.comments.length}
                     </span>

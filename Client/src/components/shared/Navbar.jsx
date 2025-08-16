@@ -101,7 +101,7 @@ const Navbar = () => {
       </li>
       <li>
         <NavLink
-          to="/all-post"
+          to="/all-posts"
           className={({ isActive }) =>
             `font-bold transition-colors duration-200 ${isActive ? "text-[#E43636]" : "text-gray-700"}`
           }
@@ -122,7 +122,7 @@ const Navbar = () => {
     </>
   );
   return (
-    <div className="navbar bg-[#F6EFD2] px-10 ">
+    <div className="navbar sticky top-0 z-50 bg-[#F6EFD2] sm:px-10 ">
       
       <div className="navbar-start">
         <div className="dropdown">

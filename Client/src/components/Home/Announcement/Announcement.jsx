@@ -30,7 +30,7 @@ const Announcement = () => {
 
   if (isError) {
     return (
-      <div className="mt-10">
+      <div className="my-10">
         <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
           Announcements
         </h2>
@@ -63,7 +63,7 @@ const Announcement = () => {
   }
 
   return (
-    <div className="mt-10">
+    <div className="my-10">
       <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
         Announcements
       </h2>

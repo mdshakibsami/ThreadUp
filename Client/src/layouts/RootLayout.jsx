@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "../components/shared/Navbar";
 import { Outlet } from "react-router";
 import useAuth from "../hooks/useAuth";
+import Footer from "../components/Footer/Footer";
 
 const RootLayout = () => {
   const { loading } = useAuth();
@@ -19,9 +20,12 @@ const RootLayout = () => {
   }
 
   return (
-    <div >
+    <div className="bg-[#FFF5F2] ">
       <Navbar></Navbar>
-      <Outlet></Outlet>
+      <div className="min-h-screen">
+        <Outlet></Outlet>
+      </div>
+      <Footer></Footer>
     </div>
   );
 };
