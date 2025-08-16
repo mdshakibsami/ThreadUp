@@ -222,11 +222,11 @@ const AddPost = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 py-12 px-4">
+    <div className="min-h-screen py-12 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-5xl font-bold text-[#e43636]  bg-clip-text  mb-4">
             Create New Post
           </h1>
           <p className="text-lg text-gray-700 font-medium mb-4">
@@ -235,13 +235,13 @@ const AddPost = () => {
         </div>
 
         {/* Form */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-purple-200 p-8 md:p-10">
+        <div className="bg-[#eeeeee] backdrop-blur-sm rounded-3xl shadow-2xl border border-purple-200 p-8 md:p-10">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* Post Title */}
             <div>
               <label
                 htmlFor="title"
-                className="block text-sm font-bold text-purple-700 mb-2"
+                className="block text-sm font-bold text-black mb-2"
               >
                 Post Title *
               </label>
@@ -259,7 +259,7 @@ const AddPost = () => {
                     message: "Title must not exceed 100 characters",
                   },
                 })}
-                className="w-full px-4 py-3 border-2 border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-gradient-to-r from-purple-50 to-pink-50"
+                className="w-full px-4 py-3 border-2 border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-[#fff5f2] text-black"
                 placeholder="Enter your post title..."
               />
               {errors.title && (
@@ -273,7 +273,7 @@ const AddPost = () => {
             <div>
               <label
                 htmlFor="description"
-                className="block text-sm font-bold text-purple-700 mb-2"
+                className="block text-sm font-bold text-black mb-2"
               >
                 Post Description *
               </label>
@@ -291,7 +291,7 @@ const AddPost = () => {
                     message: "Description must not exceed 1000 characters",
                   },
                 })}
-                className="w-full px-4 py-3 border-2 border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 resize-none bg-gradient-to-r from-purple-50 to-pink-50"
+                className="w-full px-4 py-3 border-2 border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 resize-none bg-[#fff5f2] text-black"
                 placeholder="Write your post description..."
               ></textarea>
               {errors.description && (
@@ -305,7 +305,7 @@ const AddPost = () => {
             <div>
               <label
                 htmlFor="image"
-                className="block text-sm font-bold text-purple-700 mb-2"
+                className="block text-sm font-bold text-black mb-2"
               >
                 Post Image *
               </label>
@@ -315,7 +315,7 @@ const AddPost = () => {
                   id="image"
                   accept="image/*"
                   onChange={handleImageChange}
-                  className="w-full px-4 py-3 border-2 border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-gradient-to-r from-purple-50 to-pink-50"
+                  className="w-full px-4 py-3 border-2 border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-[#fff5f2] text-black"
                 />
                 {imagePreview && (
                   <div className="mt-4">
@@ -331,10 +331,10 @@ const AddPost = () => {
 
             {/* Visibility */}
             <div>
-              <label className="block text-sm font-bold text-purple-700 mb-2">
+              <label className="block text-sm font-bold text-black mb-2">
                 Visibility *
               </label>
-              <div className="space-y-3 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+              <div className="space-y-3 p-4 bg-[#fff5f2] rounded-lg border border-purple-200">
                 <label className="flex items-center cursor-pointer">
                   <input
                     type="radio"
@@ -342,9 +342,9 @@ const AddPost = () => {
                     {...register("visibility", {
                       required: "Please select visibility",
                     })}
-                    className="h-4 w-4 text-purple-600 border-purple-300 focus:ring-purple-500"
+                    className="h-4 w-4 text-black border-purple-300 "
                   />
-                  <span className="ml-3 text-sm text-purple-700 font-medium">
+                  <span className="ml-3 text-sm text-black font-medium">
                     🌍 Public - Anyone can see this post
                   </span>
                 </label>
@@ -355,9 +355,9 @@ const AddPost = () => {
                     {...register("visibility", {
                       required: "Please select visibility",
                     })}
-                    className="h-4 w-4 text-purple-600 border-purple-300 focus:ring-purple-500"
+                    className="h-4 w-4 text-black border-purple-300 "
                   />
-                  <span className="ml-3 text-sm text-purple-700 font-medium">
+                  <span className="ml-3 text-sm text-black font-medium">
                     🔒 Private - Only you can see this post
                   </span>
                 </label>
@@ -370,28 +370,28 @@ const AddPost = () => {
             </div>
 
             {/* Tag Selection */}
-            <div>
-              <label className="block text-sm font-bold text-purple-700 mb-2">
+            <div >
+              <label className="block text-sm font-bold text-black mb-2">
                 Select Tags * (Choose multiple)
               </label>
 
               {/* Selected Tags Display */}
               {selectedTags.length > 0 && (
-                <div className="mb-4 p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
-                  <p className="text-sm text-purple-600 font-medium mb-2">
+                <div className="mb-4 p-3 bg-[#fff5f2]  rounded-lg border border-purple-200">
+                  <p className="text-sm text font-medium mb-2">
                     Selected Tags:
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 ">
                     {selectedTags.map((tag) => (
                       <span
                         key={tag}
-                        className="inline-flex items-center gap-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm font-medium"
+                        className="inline-flex items-center gap-1 bg-[#e43636] text-white px-3 py-1 rounded-full text-sm font-medium"
                       >
-                        #{tag}
+                        <span className="text-white">#{tag}</span>
                         <button
                           type="button"
                           onClick={() => removeTag(tag)}
-                          className="hover:bg-white hover:text-purple-500 rounded-full p-1 transition-colors duration-200"
+                          className="hover:bg-white hover:text-[#e43636] rounded-full p-1 transition-colors duration-200"
                         >
                           ×
                         </button>
@@ -403,9 +403,9 @@ const AddPost = () => {
 
               {/* Tag Options Grid */}
               {tagsLoading ? (
-                <div className="flex justify-center items-center p-8 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+                <div className="flex  justify-center items-center p-8 bg-[#fff5f2] rounded-lg border border-purple-200">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
-                  <span className="ml-3 text-purple-600 font-medium">
+                  <span className="ml-3 text-black font-medium">
                     Loading tags...
                   </span>
                 </div>
@@ -422,7 +422,7 @@ const AddPost = () => {
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 max-h-60 overflow-y-auto">
+                <div className="grid bg-[#fff5f2] grid-cols-2  sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-4 text-[#e43636]  rounded-lg border border-purple-200 max-h-60 overflow-y-auto">
                   {tagOptions.map((tag) => {
                     const isSelected = selectedTags.includes(tag.toLowerCase());
                     return (
@@ -432,7 +432,7 @@ const AddPost = () => {
                         onClick={() => handleTagToggle(tag)}
                         className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                           isSelected
-                            ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg scale-105"
+                            ? "bg-gradient-to-r bg-[#e43636] text-white shadow-lg scale-105"
                             : "bg-white text-purple-700 border border-purple-200 hover:bg-purple-100 hover:border-purple-300"
                         }`}
                       >
@@ -456,7 +456,7 @@ const AddPost = () => {
                 <div className="flex justify-center pt-8">
                   <Link
                     to="/member"
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-10 rounded-2xl hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-4 focus:ring-purple-300 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl border-2 border-purple-300"
+                    className="bg-[#e43636] text-white font-bold py-4 px-10 rounded-2xl hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-4 focus:ring-purple-300 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl border-2 border-purple-300"
                   >
                     Be The Member to Post
                   </Link>
@@ -467,9 +467,9 @@ const AddPost = () => {
                 <div className="flex justify-center pt-8">
                   <button
                     type="submit"
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-10 rounded-2xl hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-4 focus:ring-purple-300 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl border-2 border-purple-300"
+                    className="bg-[#e43636] text-white font-bold py-4 px-10 rounded-2xl hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-4 focus:ring-purple-300 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl border-2 border-purple-300"
                   >
-                    ✨ Create Post
+                    Create Post
                   </button>
                 </div>
               </>

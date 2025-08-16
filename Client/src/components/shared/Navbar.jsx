@@ -244,7 +244,19 @@ const Navbar = () => {
                   </span>
                 </li>
                 <li>
+                  <Link to="/">Home</Link>
+                </li>
+                <li>
+                  <Link to="/announcements">Announcements</Link>
+                </li>
+                <li>
+                  <Link to="/all-posts">All Post</Link>
+                </li>
+                <li>
                   <Link to="/dashboard">Dashboard</Link>
+                </li>
+                <li>
+                  <Link to="/about">About Us</Link>
                 </li>
                 <li>
                   <a

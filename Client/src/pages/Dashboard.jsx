@@ -25,8 +25,8 @@ const Dashboard = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate("/")}
-              className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              title="Go to Home"
+              className="p-2 bg-[#c12c2c] text-white rounded-lg transition-colors"
+              title="Home"
             >
               🏠
             </button>
@@ -64,7 +64,7 @@ const Dashboard = () => {
       <div className="flex bg-[#FFF5F2]">
         {/* Sidebar */}
         <div
-          className={`fixed inset-y-0 left-0 z-50 w-80 bg-[#F5BABB] mr-4 shadow-lg transform transition-transform duration-300 lg:relative lg:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 z-50 w-80 bg-[#eeeeee] mr-4 shadow-lg transform transition-transform duration-300 lg:relative lg:translate-x-0 ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
@@ -196,9 +196,8 @@ const Dashboard = () => {
               </div>
               <button
                 onClick={() => navigate("/")}
-                className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                className="flex bg-[#c12c2c] hover:bg-[#ea3535] items-center gap-2 px-6 py-3 text-white rounded-lg transition-colors font-semibold"
               >
-                <span>🏠</span>
                 <span>Home</span>
               </button>
             </div>

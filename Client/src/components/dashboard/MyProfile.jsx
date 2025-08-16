@@ -1,4 +1,5 @@
 import React from "react";
+import { FaThumbsUp, FaThumbsDown, FaCommentAlt } from "react-icons/fa";
 import useAuth from "../../hooks/useAuth";
 import useDBUser from "../../hooks/useDBUser";
 import { useQuery } from "@tanstack/react-query";
@@ -54,13 +55,13 @@ const MyProfile = () => {
 
   // Handle post click navigation
   const handlePostClick = (postId) => {
-    navigate(`/posts/${postId}`);
+    navigate(`/all-posts/${postId}`);
   };
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* User Profile Card */}
-      <div className="bg-white rounded-xl shadow-lg p-6">
+      <div className="bg-[#eeeeee] rounded-xl shadow-lg p-6">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
           {/* Profile Image */}
           <img
@@ -141,7 +142,7 @@ const MyProfile = () => {
       </div>
 
       {/* Recent Posts Section */}
-      <div className="bg-white rounded-xl shadow-lg p-6">
+      <div className="bg-[#eeeeee] rounded-xl shadow-lg p-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
           My Recent Posts
         </h2>
@@ -159,7 +160,7 @@ const MyProfile = () => {
             {threeePosts.map((post) => (
               <div
                 key={post._id}
-                className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow duration-200 cursor-pointer hover:bg-gray-100"
+                className="bg-[#fff5f2] rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow duration-200 cursor-pointer hover:bg-gray-100"
                 onClick={() => handlePostClick(post._id)}
               >
                 {/* Post Header */}
@@ -199,19 +200,19 @@ const MyProfile = () => {
                 <div className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-1">
-                      <span className="text-green-600">👍</span>
+                      <FaThumbsUp className="text-green-600" />
                       <span className="text-gray-700 font-medium">
                         {post.upVote || 0}
                       </span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <span className="text-red-600">👎</span>
+                      <FaThumbsDown className="text-red-600" />
                       <span className="text-gray-700 font-medium">
                         {post.downVote || 0}
                       </span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <span className="text-blue-600">💬</span>
+                      <FaCommentAlt className="text-blue-600" />
                       <span className="text-gray-700 font-medium">
                         {post.comments?.length || 0}
                       </span>
@@ -224,7 +225,10 @@ const MyProfile = () => {
 
                 {/* Click indicator */}
                 <div className="mt-3 pt-2 border-t border-gray-200">
-                  <p className="text-xs text-blue-600 font-medium text-center">
+                  <p
+                    className="text-xs font-medium text-center"
+                    style={{ color: "#e43636" }}
+                  >
                     Click to view full post →
                   </p>
                 </div>

@@ -374,7 +374,7 @@ const PostDetails = () => {
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Write your comment here..."
-                className="w-full px-4 py-3 border border-gray-300 bg-[#f6efd2] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="w-full px-4 py-3 border border-gray-300 bg-[#fff5f2] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 rows="4"
                 maxLength="500"
               />

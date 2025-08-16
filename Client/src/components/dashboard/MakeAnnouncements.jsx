@@ -114,7 +114,7 @@ const MakeAnnouncements = () => {
         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
           <span className="text-3xl">📢</span>
         </div>
-        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h2 className="text-4xl font-bold bg-black bg-clip-text text-transparent">
           Make Announcements
         </h2>
         <p className="text-gray-600 mt-2 text-lg">
@@ -123,13 +123,11 @@ const MakeAnnouncements = () => {
       </div>
 
       {/* Main Form Card */}
-      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+      <div className="bg-[#eeeeee] rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
         {/* Card Header */}
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 px-8 py-6 border-b border-gray-100">
           <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-sm">✏️</span>
-            </div>
+            
             Announcement Details
           </h3>
           <p className="text-gray-600 mt-1">
@@ -138,7 +136,7 @@ const MakeAnnouncements = () => {
         </div>
 
         {/* Form Content */}
-        <div className="p-8">
+        <div className="p-8 bg-[#eeeeee]">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Title Field */}
             <div className="group">
@@ -157,12 +155,10 @@ const MakeAnnouncements = () => {
                   value={formData.title}
                   onChange={handleInputChange}
                   placeholder="Enter a compelling announcement title..."
-                  className="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-base focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 placeholder-gray-400 group-hover:border-gray-300"
+                  className="w-full px-6 py-4 border-2 bg-[#fff5f2] border-gray-200 rounded-xl text-base focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 placeholder-gray-400 group-hover:border-gray-300"
                   disabled={createAnnouncementMutation.isPending}
                 />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4">
-                  <span className="text-2xl">📝</span>
-                </div>
+             
               </div>
               <p className="text-sm text-gray-500 mt-2 flex items-center gap-2">
                 <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
@@ -187,12 +183,10 @@ const MakeAnnouncements = () => {
                   onChange={handleInputChange}
                   placeholder="Provide detailed information about your announcement. What do you want your community to know?"
                   rows={8}
-                  className="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-base focus:outline-none focus:ring-4 focus:ring-purple-100 focus:border-purple-500 transition-all duration-200 placeholder-gray-400 resize-none group-hover:border-gray-300"
+                  className="w-full px-6  bg-[#fff5f2] py-4 border-2 border-gray-200 rounded-xl text-base focus:outline-none focus:ring-4 focus:ring-purple-100 focus:border-purple-500 transition-all duration-200 placeholder-gray-400 resize-none group-hover:border-gray-300"
                   disabled={createAnnouncementMutation.isPending}
                 />
-                <div className="absolute top-4 right-4">
-                  <span className="text-2xl">💬</span>
-                </div>
+             
               </div>
               <p className="text-sm text-gray-500 mt-2 flex items-center gap-2">
                 <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
@@ -209,7 +203,7 @@ const MakeAnnouncements = () => {
                   !formData.title.trim() ||
                   !formData.description.trim()
                 }
-                className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
+                className="w-full px-8 py-4 bg-[#e43636] text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
               >
                 {createAnnouncementMutation.isPending ? (
                   <div className="flex items-center justify-center gap-3">
@@ -218,7 +212,7 @@ const MakeAnnouncements = () => {
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-3">
-                    <span className="text-xl">🚀</span>
+                  
                     <span>Publish Announcement</span>
                   </div>
                 )}
