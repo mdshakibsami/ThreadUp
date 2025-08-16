@@ -83,7 +83,9 @@ const Navbar = () => {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `font-bold transition-colors duration-200 ${isActive ? "text-[#E43636]" : "text-gray-700"}`
+            `font-bold transition-colors duration-200 ${
+              isActive ? "text-[#E43636]" : "text-gray-700"
+            }`
           }
         >
           Home
@@ -93,7 +95,9 @@ const Navbar = () => {
         <NavLink
           to="/announcements"
           className={({ isActive }) =>
-            `font-bold transition-colors duration-200 ${isActive ? "text-[#E43636]" : "text-gray-700"}`
+            `font-bold transition-colors duration-200 ${
+              isActive ? "text-[#E43636]" : "text-gray-700"
+            }`
           }
         >
           Announcements
@@ -103,27 +107,45 @@ const Navbar = () => {
         <NavLink
           to="/all-posts"
           className={({ isActive }) =>
-            `font-bold transition-colors duration-200 ${isActive ? "text-[#E43636]" : "text-gray-700"}`
+            `font-bold transition-colors duration-200 ${
+              isActive ? "text-[#E43636]" : "text-gray-700"
+            }`
           }
         >
           All Post
         </NavLink>
       </li>
+      {user && (
+        <li>
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) =>
+              `font-bold transition-colors duration-200 ${
+                isActive ? "text-[#E43636]" : "text-gray-700"
+              }`
+            }
+          >
+            Dashboard
+          </NavLink>
+        </li>
+      )}
+
       <li>
         <NavLink
-          to="/dashboard"
-            className={({ isActive }) =>
-            `font-bold transition-colors duration-200 ${isActive ? "text-[#E43636]" : "text-gray-700"}`
+          to="/about"
+          className={({ isActive }) =>
+            `font-bold transition-colors duration-200 ${
+              isActive ? "text-[#E43636]" : "text-gray-700"
+            }`
           }
         >
-          Dashboard
+          About Us
         </NavLink>
       </li>
     </>
   );
   return (
     <div className="navbar sticky top-0 z-50 bg-[#F6EFD2] sm:px-10 ">
-      
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">

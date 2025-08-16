@@ -20,6 +20,7 @@ import AdminRoute from "../private/AdminRoute";
 import NotFound from "../components/404 page/NotFound";
 import Announcements from "../pages/Announcements";
 import AllPost from "../pages/AllPost";
+import AboutUs from "../pages/AboutUs";
 
 export const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ export const router = createBrowserRouter([
       {
         path: "all-posts",
         Component: AllPost,
+      },
+      {
+        path: "about",
+        Component: AboutUs,
       },
       {
         path: "forbidden",

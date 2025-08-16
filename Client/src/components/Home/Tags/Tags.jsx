@@ -101,7 +101,7 @@ const Tags = () => {
             onClick={() => handleTagClick("All")}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 transform ${
               selectedTag === "All"
-                ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
+                ? "bg-gradient-to-r from-purple-500 to-[#e43636] text-white shadow-lg"
                 : "bg-gray-100 text-gray-800"
             } hover:shadow-md`}
           >

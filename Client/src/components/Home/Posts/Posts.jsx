@@ -81,7 +81,7 @@ const Posts = () => {
   };
 
   return (
-    <div className="sm:mx-10 mx-auto p-4">
+    <div className="sm:mx-8 mx-auto px-2 sm:py-10">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
         <div>
           <h2 className="text-3xl font-bold text-gray-800">
@@ -99,9 +99,9 @@ const Posts = () => {
                 setCurrentPage(1);
               }}
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                sortBy === "default"
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+               sortBy === "default"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md transform scale-105"
+                  : "bg-gray-100 text-gray-700 hover:bg-gradient-to-r hover:from-purple-100 hover:to-pink-100 hover:text-purple-700"
               }`}
             >
               Default
@@ -235,7 +235,7 @@ const Posts = () => {
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
               currentPage === 1
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+                : "bg-[#e43636] text-white border border-[#e43636] hover:bg-[#c12c2c] hover:border-[#c12c2c]"
             }`}
           >
             Previous
@@ -277,8 +277,8 @@ const Posts = () => {
                   onClick={() => handlePageClick(pageNumber)}
                   className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
                     isCurrentPage
-                      ? "bg-blue-600 text-white shadow-md"
-                      : "bg-white text-gray-700 border border-gray-300 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-600"
+                      ? "bg-[#e43636] text-white shadow-md border border-[#e43636]"
+                      : "bg-white text-gray-700 border border-gray-300 hover:bg-[#e43636] hover:border-[#e43636] hover:text-white"
                   }`}
                 >
                   {pageNumber}
@@ -294,7 +294,7 @@ const Posts = () => {
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
               currentPage === totalPages
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+                : "bg-[#e43636] text-white border border-[#e43636] hover:bg-[#c12c2c] hover:border-[#c12c2c]"
             }`}
           >
             Next

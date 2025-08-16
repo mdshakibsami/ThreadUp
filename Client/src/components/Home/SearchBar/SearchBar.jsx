@@ -75,7 +75,7 @@ const SearchBar = () => {
             {/* Search button */}
             <button
               type="submit"
-              className="btn bg-gradient-to-r from-purple-500 to-pink-500 text-white border-none hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="btn bg-gradient-to-r from-purple-500 to-[#e43636] text-white border-none hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
               <svg
                 className="w-5 h-5 mr-2"
