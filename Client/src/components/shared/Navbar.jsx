@@ -88,7 +88,7 @@ const Navbar = () => {
     </>
   );
   return (
-    <div className="navbar ">
+    <div className="navbar bg-[#F6EFD2] ">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -204,7 +204,7 @@ const Navbar = () => {
             </Link>
             <Link
               to="/register"
-              className="btn text-white bg-[#f73395] hover:scale-101"
+              className="btn text-white color-primary hover:scale-101"
             >
               Join Us
             </Link>
