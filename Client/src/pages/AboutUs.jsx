@@ -1,4 +1,5 @@
 import React from "react";
+import Swal from "sweetalert2";
 import {
   FaRegComments,
   FaUsers,
@@ -9,6 +10,24 @@ import {
 } from "react-icons/fa";
 
 const AboutUs = () => {
+  const handelSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    // const name = form.elements["name"].value;
+    // const email = form.elements["email"].value;
+    // const subject = form.elements["subject"].value;
+    // const message = form.elements["message"].value;
+
+    // console.log({ name, email, subject, message });
+
+    Swal.fire({
+      icon: "success",
+      title: "Thank you for your mail!",
+      text: "I'll respond to you soon.",
+      confirmButtonColor: "#E43636",
+    });
+    form.reset();
+  };
   return (
     <div className="min-h-screen px-2 sm:px-10 bg-[#fff5f2] py-12 flex flex-col items-center justify-center">
       {/* About Us Heading and Description */}
@@ -27,7 +46,7 @@ const AboutUs = () => {
       </div>
 
       {/* Features Card */}
-      <div className="px-2 sm:px-10 w-full bg-[#F6EFD2] rounded-2xl shadow-lg p-8 mb-10">
+      <div className="px-2 sm:px-10 w-full bg-[#eeeeee] rounded-2xl shadow-lg p-8 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="flex flex-col items-center bg-[#fff5f2] rounded-xl p-6 shadow">
             <FaLightbulb className="text-[#E43636] text-3xl mb-2" />
@@ -51,7 +70,7 @@ const AboutUs = () => {
       </div>
 
       {/* Contact Section */}
-      <div className="w-full bg-[#F6EFD2] rounded-2xl shadow-lg p-8">
+      <div className="w-full bg-[#eeeeee] rounded-2xl shadow-lg p-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
           {/* Contact Info */}
           <div className="flex flex-col justify-center md:items-start items-center text-gray-700 gap-6">
@@ -148,7 +167,10 @@ const AboutUs = () => {
             </div>
           </div>
           {/* Contact Form */}
-          <form className="bg-[#fff5f2] rounded-2xl shadow-lg p-8 flex flex-col gap-4 justify-center">
+          <form
+            onSubmit={handelSubmit}
+            className="bg-[#fff5f2] rounded-2xl shadow-lg p-8 flex flex-col gap-4 justify-center"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col">
                 <label className="font-semibold mb-1 text-gray-700">
@@ -157,7 +179,8 @@ const AboutUs = () => {
                 <input
                   type="text"
                   placeholder="Md Shakib"
-                  className="input input-bordered w-full bg-[#F6EFD2] border-[#E43636] focus:border-[#E43636] focus:outline-none"
+                  name="name"
+                  className="input input-bordered w-full bg-[#eeeeee] border-[#E43636] focus:border-[#E43636] focus:outline-none"
                   required
                 />
               </div>
@@ -167,8 +190,9 @@ const AboutUs = () => {
                 </label>
                 <input
                   type="email"
+                  name="email"
                   placeholder="shakib@example.com"
-                  className="input input-bordered w-full bg-[#F6EFD2] border-[#E43636] focus:border-[#E43636] focus:outline-none"
+                  className="input input-bordered w-full bg-[#eeeeee] border-[#E43636] focus:border-[#E43636] focus:outline-none"
                   required
                 />
               </div>
@@ -179,8 +203,9 @@ const AboutUs = () => {
               </label>
               <input
                 type="text"
+                name="subject"
                 placeholder="How can I help you?"
-                className="input input-bordered w-full bg-[#F6EFD2] border-[#E43636] focus:border-[#E43636] focus:outline-none"
+                className="input input-bordered w-full bg-[#eeeeee] border-[#E43636] focus:border-[#E43636] focus:outline-none"
                 required
               />
             </div>
@@ -189,18 +214,18 @@ const AboutUs = () => {
                 Message
               </label>
               <textarea
+                name="message"
                 placeholder="Your message here..."
-                className="textarea textarea-bordered w-full bg-[#F6EFD2] border-[#E43636] focus:border-[#E43636] focus:outline-none"
+                className="textarea textarea-bordered w-full bg-[#eeeeee] border-[#E43636] focus:border-[#E43636] focus:outline-none"
                 rows={4}
                 required
               ></textarea>
             </div>
-            <button
+            <input
               type="submit"
+              value="➤  Send Message"
               className="btn text-white font-bold px-6 py-2 rounded bg-[#E43636] transition-all duration-200 flex items-center justify-center gap-2"
-            >
-              <span className="text-lg">➤</span> Send Message
-            </button>
+            />
           </form>
         </div>
       </div>

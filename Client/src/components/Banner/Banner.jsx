@@ -3,7 +3,7 @@ import laptopImg from "../../assets/Banner/banner.svg";
 
 const Banner = () => {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 items-center bg-[#F6EFD2] px-8 py-16 min-h-[60vh] gap-8">
+    <section className="grid grid-cols-1 md:grid-cols-2 items-center bg-[#eeeeee] px-8 py-16 min-h-[60vh] gap-8">
       {/* Left: Text */}
       <div className="order-2 md:order-1 text-left md:pr-12 mb-8 md:mb-0">
         <h2 className="text-3xl  md:text-5xl font-semibold text-[#E43636] mb-4">

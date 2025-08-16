@@ -12,7 +12,6 @@ const Announcement = () => {
     },
   });
 
-  console.log("Announcements data:", data);
   const announcements = data?.announcements || [];
 
   if (isLoading) {
@@ -64,15 +63,22 @@ const Announcement = () => {
 
   return (
     <div className="my-10">
-      <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
+      <h2 className="text-3xl font-bold text-center mb-2 text-gray-800">
         Announcements
       </h2>
+      <div className="w-full max-w-7xl text-center te text-gray-600 text-base mb-8 mx-auto">
+        <p className="text-xl">
+          Stay updated with the latest news and important updates from ThreadUp.
+          Only administrators can create announcements, ensuring all information
+          here is official and relevant to the community.
+        </p>
+      </div>
 
-      <div className="space-y-8 max-w-7xl mx-auto px-4">
+      <div className="space-y-8 px-2 sm:px-10 mx-auto ">
         {announcements.map((announcement, index) => (
           <div
             key={announcement._id || index}
-            className="bg-white border-l-4 border-blue-500 shadow-lg relative overflow-hidden rounded-lg"
+            className="bg-[#eeeeee] border-l-4 border-blue-500 shadow-lg relative overflow-hidden rounded-lg"
           >
             {/* Decorative accents */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full -translate-y-16 translate-x-16"></div>

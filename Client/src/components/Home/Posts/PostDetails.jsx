@@ -216,8 +216,8 @@ const PostDetails = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className="px-2 sm:px-10 mx-auto p-6">
+      <div className="bg-[#eeeeee] rounded-xl shadow-lg overflow-hidden">
         {/* Author Section */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center gap-4">
@@ -251,11 +251,6 @@ const PostDetails = () => {
             {post.title}
           </h1>
 
-          {/* Post Description */}
-          <p className="text-lg text-gray-700 leading-relaxed mb-6">
-            {post.description}
-          </p>
-
           {/* Post Image */}
           {post.image && (
             <div className="mb-6">
@@ -266,6 +261,11 @@ const PostDetails = () => {
               />
             </div>
           )}
+
+          {/* Post Description */}
+          <p className="text-lg text-gray-700 leading-relaxed mb-6">
+            {post.description}
+          </p>
 
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
@@ -288,7 +288,7 @@ const PostDetails = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
+        <div className="px-6 py-4 bg-[#eeeeee] border-t border-gray-200">
           <div className="flex items-center justify-between">
             {/* Left side - Engagement buttons */}
             <div className="flex items-center gap-6">
@@ -363,7 +363,7 @@ const PostDetails = () => {
         </div>
 
         {/* Comment Section */}
-        <div className="px-6 py-6 border-t border-gray-200 bg-gray-50">
+        <div className="px-6 py-6 border-t border-gray-200 bg-[#eeeeee]">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Add a Comment
           </h3>
@@ -374,7 +374,7 @@ const PostDetails = () => {
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Write your comment here..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="w-full px-4 py-3 border border-gray-300 bg-[#f6efd2] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 rows="4"
                 maxLength="500"
               />
@@ -396,7 +396,7 @@ const PostDetails = () => {
                 className={`px-6 py-2 rounded-lg font-semibold transition-all duration-200 ${
                   !comment.trim() || isSubmittingComment || !user
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-blue-600 text-white hover:bg-blue-700 transform hover:scale-105"
+                    : "bg-[#c12c2c] text-white transform hover:scale-105"
                 }`}
               >
                 {isSubmittingComment ? (
@@ -414,7 +414,7 @@ const PostDetails = () => {
 
         {/* Comments List */}
         {post.comments && post.comments.length > 0 && (
-          <div className="px-6 py-6 border-t border-gray-200 bg-white">
+          <div className="px-6 py-6 border-t border-gray-200 bg-[#eeeeee]">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Comments ({post.comments.length})
             </h3>

@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#F6EFD2] sm:px-10 text-gray-700 py-6 border-t border-[#E43636]">
+    <footer className="bg-[#eeeeee] sm:px-10 text-gray-700 py-6 border-t border-[#E43636]">
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
         <span className="text-sm">
           © {new Date().getFullYear()} ThreadUp. All rights reserved.
