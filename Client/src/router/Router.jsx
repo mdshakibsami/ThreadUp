@@ -17,6 +17,9 @@ import MakeAnnouncements from "../components/dashboard/MakeAnnouncements";
 import PrivateRouter from "../private/PrivateRouter";
 import Forbidden from "../components/404 page/Forbidden";
 import AdminRoute from "../private/AdminRoute";
+import NotFound from "../components/404 page/NotFound";
+import Announcements from "../pages/Announcements";
+import AllPost from "../pages/AllPost";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +43,14 @@ export const router = createBrowserRouter([
         Component: Login,
       },
       {
+        path: "announcements",
+        Component: Announcements,
+      },
+      {
+        path: "all-post",
+        Component: AllPost,
+      },
+      {
         path: "forbidden",
         Component: Forbidden,
       },
@@ -49,7 +60,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "posts/:id",
-        element:<PrivateRouter><PostDetails></PostDetails></PrivateRouter>
+        element: (
+          <PrivateRouter>
+            <PostDetails></PostDetails>
+          </PrivateRouter>
+        ),
       },
     ],
   },
@@ -110,5 +125,9 @@ export const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "*",
+    Component: NotFound,
   },
 ]);

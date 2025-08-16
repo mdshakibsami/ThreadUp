@@ -80,15 +80,50 @@ const Navbar = () => {
   const links = (
     <>
       <li>
-        <NavLink to="/">Home</NavLink>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `font-bold transition-colors duration-200 ${isActive ? "text-[#E43636]" : "text-gray-700"}`
+          }
+        >
+          Home
+        </NavLink>
       </li>
       <li>
-        <Link to="/dashboard">Dashboard</Link>
+        <NavLink
+          to="/announcements"
+          className={({ isActive }) =>
+            `font-bold transition-colors duration-200 ${isActive ? "text-[#E43636]" : "text-gray-700"}`
+          }
+        >
+          Announcements
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/all-post"
+          className={({ isActive }) =>
+            `font-bold transition-colors duration-200 ${isActive ? "text-[#E43636]" : "text-gray-700"}`
+          }
+        >
+          All Post
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/dashboard"
+            className={({ isActive }) =>
+            `font-bold transition-colors duration-200 ${isActive ? "text-[#E43636]" : "text-gray-700"}`
+          }
+        >
+          Dashboard
+        </NavLink>
       </li>
     </>
   );
   return (
-    <div className="navbar bg-[#F6EFD2] ">
+    <div className="navbar bg-[#F6EFD2] px-10 ">
+      
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -115,7 +150,10 @@ const Navbar = () => {
             {links}
           </ul>
         </div>
-        <a className="btn hidden md:block btn-ghost text-xl text-[#f73395] font-bold">
+        <a
+          href="/"
+          className=" hidden md:block text-xl text-[#E43636] font-bold"
+        >
           ThreadUp
         </a>
       </div>
@@ -128,7 +166,7 @@ const Navbar = () => {
             {!dbUser?.isMember && (
               <Link
                 to="/member"
-                className="btn text-white bg-[#f73395] hover:scale-101"
+                className="btn text-white bg-[#E43636] hover:scale-101"
               >
                 Be The Member
               </Link>
@@ -151,7 +189,7 @@ const Navbar = () => {
                   />
                 </svg>
                 {notificationCount > 0 && (
-                  <span className="badge badge-sm badge-primary bg-[#f73395] indicator-item">
+                  <span className="badge badge-sm badge-primary bg-[#E43636] indicator-item">
                     {notificationCount > 99 ? "99+" : notificationCount}
                   </span>
                 )}
@@ -204,7 +242,7 @@ const Navbar = () => {
             </Link>
             <Link
               to="/register"
-              className="btn text-white color-primary hover:scale-101"
+              className="btn text-white color-primary bg-[#E43636] hover:scale-101"
             >
               Join Us
             </Link>
