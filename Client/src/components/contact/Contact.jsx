@@ -27,7 +27,7 @@ const Contact = () => {
   return (
     <>
       {/* Contact Section */}
-      <div className="w-full px-4 sm:mx-10 bg-[#eeeeee] rounded-2xl shadow-lg sm:p-4">
+      <div className="w-full mx-auto bg-[#eeeeee] rounded-2xl shadow-lg sm:p-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
           {/* Contact Info */}
           <div className="flex flex-col justify-center md:items-start items-center text-gray-700 gap-6">

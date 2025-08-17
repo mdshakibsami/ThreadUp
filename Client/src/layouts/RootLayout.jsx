@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "../components/shared/Navbar";
 import { Outlet } from "react-router";
 import useAuth from "../hooks/useAuth";
-import Footer from "../components/Footer/Footer";
+import Footer from "../components/shared/Footer";
 
 const RootLayout = () => {
   const { loading } = useAuth();

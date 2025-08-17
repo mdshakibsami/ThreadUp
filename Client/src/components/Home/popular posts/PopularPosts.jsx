@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { axiosSecure } from "../../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../hooks/useAxiosSecure";
 import { useNavigate } from "react-router";
 import { FaThumbsUp, FaThumbsDown, FaCommentAlt } from "react-icons/fa";
 
@@ -10,7 +10,7 @@ const fetchPopularPosts = async () => {
 const PopularPosts = () => {
   const navigate = useNavigate();
   const {
-    data: recentPosts,
+    data: popularPosts,
     isLoading,
     error,
   } = useQuery({
@@ -23,15 +23,15 @@ const PopularPosts = () => {
       <div className="flex flex-col items-center justify-center py-10">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#e43636] mb-4"></div>
         <span className="text-[#e43636] text-lg font-semibold">
-          Loading recent posts...
+          Loading popular posts...
         </span>
       </div>
     );
   if (
     error ||
-    !recentPosts ||
-    !Array.isArray(recentPosts) ||
-    recentPosts.length === 0
+    !popularPosts ||
+    !Array.isArray(popularPosts) ||
+    popularPosts.length === 0
   )
     return (
       <div className="flex flex-col items-center justify-center py-10">
@@ -39,7 +39,7 @@ const PopularPosts = () => {
           <span className="text-4xl text-[#e43636]">🔥</span>
         </div>
         <span className="text-[#e43636] text-lg font-semibold">
-          No recent posts found.
+          No popular posts found.
         </span>
       </div>
     );
@@ -47,7 +47,7 @@ const PopularPosts = () => {
   return (
     <div className="my-10 px-2 sm:px-10">
       <h2 className="text-3xl font-bold text-[#e43636] mb-2 text-center tracking-tight">
-        Recent Posts
+        Popular Posts
       </h2>
       <p className="text-center text-gray-700 mb-8 max-w-5xl text-md mx-auto ">
         Discover the most engaging and highly upvoted posts from our community.
@@ -55,7 +55,7 @@ const PopularPosts = () => {
         comments, showcasing trending topics and valuable discussions.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {recentPosts.map((post) => (
+        {popularPosts.map((post) => (
           <div
             onClick={() => navigate(`/all-posts/${post._id}`)}
             key={post._id}

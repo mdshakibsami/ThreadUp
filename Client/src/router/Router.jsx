@@ -4,7 +4,6 @@ import Home from "../pages/Home";
 import Login from "../components/Auth/Login";
 import Register from "../components/Auth/Register";
 import Dashboard from "../pages/Dashboard";
-import AddPost from "../components/Add Post/AddPost";
 import PostDetails from "../components/Home/Posts/PostDetails";
 import MyProfile from "../components/dashboard/MyProfile";
 import MyPosts from "../components/dashboard/MyPosts";
@@ -21,6 +20,7 @@ import NotFound from "../components/404 page/NotFound";
 import Announcements from "../pages/Announcements";
 import AllPost from "../pages/AllPost";
 import AboutUs from "../pages/AboutUs";
+import AddPost from "../components/dashboard/AddPost";
 
 export const router = createBrowserRouter([
   {

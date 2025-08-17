@@ -382,7 +382,7 @@ async function run() {
         const posts = await postsCollection
           .find({})
           .sort({ createdAt: -1 })
-          .limit(8)
+          .limit(4)
           .toArray();
         res.status(200).send(posts);
       } catch (error) {

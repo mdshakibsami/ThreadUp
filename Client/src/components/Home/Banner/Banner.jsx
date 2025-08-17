@@ -1,4 +1,4 @@
-import laptopImg from "../../assets/Banner/banner.svg";
+import laptopImg from "../../../assets/Banner/banner.svg";
 
 const Banner = () => {
   return (
