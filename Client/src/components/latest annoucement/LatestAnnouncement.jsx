@@ -37,9 +37,14 @@ const LatestAnnouncement = () => {
 
   return (
     <div className="px-4 sm:px-10 py-10">
-      <h2 className="text-3xl font-bold  mb-10 text-center tracking-tight">
+      <h2 className="text-3xl font-bold mb-2 text-[#e43636] text-center tracking-tight">
         Latest Announcement
       </h2>
+      <p className="text-center text-gray-700 mb-8 max-w-5xl text-md mx-auto text-base">
+        Stay updated with the most recent news, updates, and important
+        information from the ThreadUp team. Latest announcements keep you
+        informed about new features, events, and community highlights.
+      </p>
       <div
         key={announcement._id}
         className="bg-[#eeeeee] border-l-4 border-blue-500 shadow-lg relative overflow-hidden rounded-lg"

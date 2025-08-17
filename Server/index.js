@@ -375,6 +375,47 @@ async function run() {
     });
 
     // ------------------------ Posts API-----------------------------------------
+
+    // latest posts
+    app.get("/latest-posts", async (req, res) => {
+      try {
+        const posts = await postsCollection
+          .find({})
+          .sort({ createdAt: -1 })
+          .limit(8)
+          .toArray();
+        res.status(200).send(posts);
+      } catch (error) {
+        console.error("Error fetching latest posts:", error);
+        res.status(500).json({ success: false, error: error.message });
+      }
+    });
+
+    // most popular post based on upvote 
+    app.get("/popular-posts", async (req, res) => {
+      try {
+      const posts = await postsCollection
+        .aggregate([
+        {
+          $addFields: {
+          popularity: {
+            $add: [
+            { $ifNull: ["$upVote", 0] },
+            { $size: { $ifNull: ["$comments", []] } }
+            ]
+          }
+          }
+        },
+        { $sort: { popularity: -1 } },
+        { $limit: 8 }
+        ])
+        .toArray();
+      res.status(200).send(posts);
+      } catch (error) {
+      console.error("Error fetching popular posts:", error);
+      res.status(500).json({ success: false, error: error.message });
+      }
+    });
     // post api for post
     app.post("/posts", async (req, res) => {
       try {

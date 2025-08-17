@@ -27,17 +27,17 @@ const Contact = () => {
   return (
     <>
       {/* Contact Section */}
-      <div className="w-full px-4 sm:px-10 bg-[#eeeeee] rounded-2xl shadow-lg p-8">
+      <div className="w-full px-4 sm:mx-10 bg-[#eeeeee] rounded-2xl shadow-lg sm:p-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
           {/* Contact Info */}
           <div className="flex flex-col justify-center md:items-start items-center text-gray-700 gap-6">
             <h2 className="text-3xl font-bold text-[#E43636] mb-2 text-left md:text-left">
               Contact Information
             </h2>
-            <p className="text-lg text-gray-600 mb-4 text-left md:text-left">
+            <p className="text-lg text-gray-600  mb-4 text-center md:text-left">
               Fill up the form and I'll get back to you as soon as possible.
             </p>
-            <div className="flex flex-col gap-6 w-full">
+            <div className="flex flex-col gap-6 w-full items-center sm:items-start">
               <div className="flex items-center gap-4">
                 <div
                   className="bg-[#E43636] rounded-xl p-3 flex items-center justify-center"
