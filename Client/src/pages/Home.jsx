@@ -4,6 +4,7 @@ import Contact from "../components/contact/Contact";
 import LatestAnnouncement from "../components/Home/latest annoucement/LatestAnnouncement";
 import PopularPosts from "../components/Home/popular posts/PopularPosts";
 import RecentPosts from "../components/Home/recent posts/RecentPosts";
+import Newsletter from "../components/Home/newsletter/Newsletter";
 const Home = () => {
   return (
     <div>
@@ -12,6 +13,7 @@ const Home = () => {
         <RecentPosts></RecentPosts>
         <LatestAnnouncement></LatestAnnouncement>
         <PopularPosts></PopularPosts>
+        <Newsletter></Newsletter>
 
         <hr className="text-white" />
         <div className="px-4 sm:px-10">

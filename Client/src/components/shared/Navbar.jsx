@@ -1,14 +1,32 @@
 import React from "react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import "../Auth/sweetalert-custom.css";
 import useDBUser from "../../hooks/useDBUser";
+import { axiosSecure } from "../../hooks/useAxiosSecure";
 
+import { useQuery } from "@tanstack/react-query";
+
+const getLengthOfNotifications = async () => {
+  const res = await axiosSecure.get("/total-announcements");
+  return res.data;
+};
 const Navbar = () => {
   const { user, logOut } = useAuth();
-  const notificationCount = 3; // This would come from your notification state/API
+  const navigate = useNavigate();
 
+  const {
+    data: notificationCount,
+    isLoading: notificationLoading,
+    error: notificationError,
+  } = useQuery({
+    queryKey: ["notificationCount"],
+    queryFn: getLengthOfNotifications,
+  });
+
+  console.log(notificationCount);
+  const totalAnnouncements = notificationCount.totalAnnouncements;
   const { data: dbUser } = useDBUser(user?.uid);
   console.log(dbUser);
 
@@ -144,6 +162,10 @@ const Navbar = () => {
       </li>
     </>
   );
+
+  const handelNotification = () => {
+    navigate("/announcements");
+  };
   return (
     <div className="navbar sticky top-0 z-50 bg-[#eeeeee] sm:px-10 ">
       <div className="navbar-start">
@@ -194,7 +216,10 @@ const Navbar = () => {
               </Link>
             )}
             {/* Notification Icon */}
-            <button className="btn btn-ghost btn-circle">
+            <button
+              onClick={handelNotification}
+              className="btn btn-ghost btn-circle"
+            >
               <div className="indicator">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -210,11 +235,13 @@ const Navbar = () => {
                     d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                   />
                 </svg>
-                {notificationCount > 0 && (
-                  <span className="badge badge-sm badge-primary bg-[#E43636] indicator-item">
-                    {notificationCount > 99 ? "99+" : notificationCount}
-                  </span>
-                )}
+                {!notificationLoading &&
+                  !notificationError &&
+                  totalAnnouncements > 0 && (
+                    <span className="badge badge-sm badge-primary bg-[#E43636] indicator-item">
+                      {totalAnnouncements > 99 ? "99+" : totalAnnouncements}
+                    </span>
+                  )}
               </div>
             </button>
             {/* Profile dropdown */}

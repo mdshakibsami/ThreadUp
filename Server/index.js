@@ -190,6 +190,17 @@ async function run() {
         res.status(500).json({ success: false, error: error.message });
       }
     });
+
+    // total announcements
+    app.get("/total-announcements", (req, res) => {
+      announcementCollection
+        .countDocuments()
+        .then((count) => res.json({ totalAnnouncements: count }))
+        .catch((error) => {
+          console.error("Error counting announcements:", error);
+          res.status(500).json({ error: "Failed to count announcements" });
+        });
+    });
     // ------------------------ User API-----------------------------------------
 
     app.post("/users", async (req, res) => {
@@ -391,29 +402,29 @@ async function run() {
       }
     });
 
-    // most popular post based on upvote 
+    // most popular post based on upvote
     app.get("/popular-posts", async (req, res) => {
       try {
-      const posts = await postsCollection
-        .aggregate([
-        {
-          $addFields: {
-          popularity: {
-            $add: [
-            { $ifNull: ["$upVote", 0] },
-            { $size: { $ifNull: ["$comments", []] } }
-            ]
-          }
-          }
-        },
-        { $sort: { popularity: -1 } },
-        { $limit: 8 }
-        ])
-        .toArray();
-      res.status(200).send(posts);
+        const posts = await postsCollection
+          .aggregate([
+            {
+              $addFields: {
+                popularity: {
+                  $add: [
+                    { $ifNull: ["$upVote", 0] },
+                    { $size: { $ifNull: ["$comments", []] } },
+                  ],
+                },
+              },
+            },
+            { $sort: { popularity: -1 } },
+            { $limit: 8 },
+          ])
+          .toArray();
+        res.status(200).send(posts);
       } catch (error) {
-      console.error("Error fetching popular posts:", error);
-      res.status(500).json({ success: false, error: error.message });
+        console.error("Error fetching popular posts:", error);
+        res.status(500).json({ success: false, error: error.message });
       }
     });
     // post api for post
