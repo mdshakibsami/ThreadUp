@@ -23,10 +23,10 @@ admin.initializeApp({
 });
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.odubfg0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-// test 
-app.get("/test",(req,res)=>{
-  res.json({status:"success"});
-})
+// test
+app.get("/test", (req, res) => {
+  res.json({ status: "success" });
+});
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -157,6 +157,22 @@ async function run() {
         res.status(201).json({ success: true, result });
       } catch (error) {
         console.error("Error creating announcement:", error);
+        res.status(500).json({ success: false, error: error.message });
+      }
+    });
+
+    // Get the latest announcement
+    app.get("/latest-announcement", async (_req, res) => {
+      try {
+        const latestAnnouncement = await announcementCollection
+          .find()
+          .sort({ createdAt: -1 })
+          .limit(1)
+          .toArray();
+
+        res.status(200).send(latestAnnouncement);
+      } catch (error) {
+        console.error("Error fetching latest announcement:", error);
         res.status(500).json({ success: false, error: error.message });
       }
     });
